@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "datetime-picker",
+  "homepage": "https://github.com/mrphilipp7/shadcn-datetime-picker",
+  "items": [
+    {
+      "name": "datetime-picker",
+      "type": "registry:ui",
+      "title": "Date Time Picker",
+      "description": "A date and time picker for shadcn/ui with a Material UI-inspired experience, supporting calendar selection, time selection, 12/24-hour formats, and configurable granularity.",
+      "dependencies": [
+        "@internationalized/date",
+        "react-aria-components",
+        "lucide-react"
+      ],
+      "registryDependencies": ["button", "scroll-area"],
+      "files": [
+        {
+          "path": "datetime-picker-context.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "datetime-picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    }
+  ]
+}
