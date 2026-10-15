@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   Button,
@@ -16,35 +16,35 @@ import {
   Calendar,
   type DatePickerProps as AriaDatePickerProps,
   type DateValue,
-} from "react-aria-components"
+} from "react-aria-components";
 
-import { Button as ShadButton } from "@/components/ui/button"
+import { Button as ShadButton } from "@/components/ui/button";
 
-import { ScrollArea as ShadScrollArea } from "@/components/ui/scroll-area"
+import { ScrollArea as ShadScrollArea } from "@/components/ui/scroll-area";
 
-import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-import React from "react"
+import React from "react";
 
 import {
   toCalendarDateTime,
   now,
   getLocalTimeZone,
-} from "@internationalized/date"
+} from "@internationalized/date";
 
-import { DateTimeContext, useDateTime } from "./datetime-picker-context"
+import { DateTimeContext, useDateTime } from "./datetime-picker-context";
 
 /* =========================================================
    TIME SELECTION DATA ARRAYS
    These are used to render scrollable/selectable time units
 ========================================================= */
 
-const hoursMilitary = Array.from({ length: 24 }, (_, i) => i)
-const hours = Array.from({ length: 12 }, (_, i) => i + 1)
-const minutes = Array.from({ length: 60 }, (_, i) => i)
-const seconds = Array.from({ length: 60 }, (_, i) => i)
-const AmPm = ["AM", "PM"]
+const hoursMilitary = Array.from({ length: 24 }, (_, i) => i);
+const hours = Array.from({ length: 12 }, (_, i) => i + 1);
+const minutes = Array.from({ length: 60 }, (_, i) => i);
+const seconds = Array.from({ length: 60 }, (_, i) => i);
+const AmPm = ["AM", "PM"];
 
 /* =========================================================
    COMPONENT PROPS (wrapper around react-aria DatePicker)
@@ -61,22 +61,22 @@ type PickerProps = Omit<
   | "className"
   | "defaultOpen"
   | "defaultValue"
->
+>;
 
 type DateTimePickerProps = {
-  label?: string
-  description?: string
-  errorMessage?: string
-  className?: string
-  value?: DateValue | null
-  onChange?: (value: DateValue | null) => void
+  label?: string;
+  description?: string;
+  errorMessage?: string;
+  className?: string;
+  value?: DateValue | null;
+  onChange?: (value: DateValue | null) => void;
 
   /**
    * Pass-through props to react-aria DatePicker
    * e.g. granularity, minValue, maxValue, hourCycle, etc.
    */
-  pickerProps?: PickerProps
-}
+  pickerProps?: PickerProps;
+};
 
 /* =========================================================
    MAIN COMPONENT
@@ -92,7 +92,7 @@ export function SlotPicker({
   onChange,
   pickerProps,
 }: DateTimePickerProps) {
-  const [isOpen, setIsOpen] = React.useState(false)
+  const [isOpen, setIsOpen] = React.useState(false);
 
   /* ---------------------------------------------------------
      Context value shared across calendar + time subcomponents
@@ -107,28 +107,28 @@ export function SlotPicker({
       close: () => setIsOpen(false),
       isOpen,
     }),
-    [value, onChange, pickerProps?.granularity, pickerProps?.hourCycle, isOpen]
-  )
+    [value, onChange, pickerProps?.granularity, pickerProps?.hourCycle, isOpen],
+  );
 
   /* ---------------------------------------------------------
      Granularity flags (controls time UI rendering)
   --------------------------------------------------------- */
 
   const isDayOnly =
-    pickerProps?.granularity === "day" || !pickerProps?.granularity
+    pickerProps?.granularity === "day" || !pickerProps?.granularity;
 
   const showHour =
     pickerProps?.granularity === "hour" ||
     pickerProps?.granularity === "minute" ||
-    pickerProps?.granularity === "second"
+    pickerProps?.granularity === "second";
 
   const showMinute =
     pickerProps?.granularity === "minute" ||
-    pickerProps?.granularity === "second"
+    pickerProps?.granularity === "second";
 
-  const showSecond = pickerProps?.granularity === "second"
+  const showSecond = pickerProps?.granularity === "second";
 
-  const showAmPm = showHour && ctxValue.hourCycle === 12
+  const showAmPm = showHour && ctxValue.hourCycle === 12;
 
   /* ---------------------------------------------------------
      react-aria requires either a visible <Label> or an
@@ -137,8 +137,8 @@ export function SlotPicker({
   --------------------------------------------------------- */
 
   const hasAccessibleLabel = Boolean(
-    label || pickerProps?.["aria-label"] || pickerProps?.["aria-labelledby"]
-  )
+    label || pickerProps?.["aria-label"] || pickerProps?.["aria-labelledby"],
+  );
 
   /* =========================================================
      RENDER
@@ -154,7 +154,7 @@ export function SlotPicker({
         onOpenChange={setIsOpen}
         shouldCloseOnSelect={false}
         onChange={(v) => onChange?.(v)}
-        className={cn("flex flex-col gap-2", className)}
+        className={cn("flex flex-col gap-3", className)}
         shouldForceLeadingZeros={pickerProps?.shouldForceLeadingZeros ?? true}
       >
         {/* =====================================================
@@ -163,9 +163,9 @@ export function SlotPicker({
         {label && (
           <Label
             className={cn(
-              "group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-2.5 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10",
+              "group/field-label peer/field-label flex w-fit gap-2 text-sm leading-snug font-medium group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-2.5 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10",
               "has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col",
-              className
+              className,
             )}
           >
             {label}
@@ -177,18 +177,18 @@ export function SlotPicker({
         ===================================================== */}
         <Group
           className={cn(
-            "relative flex h-8 w-full items-center gap-1 rounded-lg border border-input bg-transparent px-2.5 py-1",
+            "relative flex h-9 w-full items-center gap-1 rounded-md border border-input bg-transparent px-2.5 py-1 shadow-xs",
             "text-sm transition-colors outline-none",
             "focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50",
             "disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50",
             "aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20",
-            "dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40"
+            "dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
           )}
         >
           <DateInput
             className={cn(
               "flex w-full min-w-0 items-center gap-0.5 text-sm text-foreground",
-              "placeholder:text-muted-foreground"
+              "placeholder:text-muted-foreground",
             )}
           >
             {(segment) => (
@@ -197,7 +197,7 @@ export function SlotPicker({
                 className={cn(
                   "rounded-sm px-0.5 py-0.5 tabular-nums outline-none",
                   "focus:bg-accent focus:text-accent-foreground",
-                  "aria-invalid:text-destructive"
+                  "aria-invalid:text-destructive",
                 )}
               />
             )}
@@ -209,7 +209,7 @@ export function SlotPicker({
               "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
               "focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
               "disabled:pointer-events-none disabled:opacity-50",
-              "enabled:cursor-pointer"
+              "enabled:cursor-pointer",
             )}
             onClick={() => setIsOpen(true)}
           >
@@ -227,7 +227,7 @@ export function SlotPicker({
               "text-left text-sm leading-normal font-normal text-muted-foreground group-has-data-horizontal/field:text-balance [[data-variant=legend]+&]:-mt-1.5",
               "last:mt-0 nth-last-2:-mt-1",
               "[&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary",
-              className
+              className,
             )}
           >
             {description}
@@ -249,7 +249,7 @@ export function SlotPicker({
         <Popover
           className="z-50 rounded-md border bg-popover p-4 text-popover-foreground shadow-md"
           shouldCloseOnInteractOutside={(element) => {
-            return !element.closest("[data-datetime-picker]")
+            return !element.closest("[data-datetime-picker]");
           }}
         >
           <Dialog className="outline-none">
@@ -267,19 +267,19 @@ export function SlotPicker({
               <Calendar
                 onChange={(date) => {
                   if (isDayOnly) {
-                    onChange?.(date)
-                    setIsOpen(false)
+                    onChange?.(date);
+                    setIsOpen(false);
                   } else {
-                    const hasExistingTime = value && "hour" in value
+                    const hasExistingTime = value && "hour" in value;
                     const timeSource = hasExistingTime
                       ? value
                       : now(getLocalTimeZone()).set({
                           hour: 0,
                           minute: 0,
                           second: 0,
-                        })
-                    const toDateTime = toCalendarDateTime(date, timeSource)
-                    onChange?.(toDateTime)
+                        });
+                    const toDateTime = toCalendarDateTime(date, timeSource);
+                    onChange?.(toDateTime);
                   }
                 }}
               >
@@ -325,7 +325,7 @@ export function SlotPicker({
                         "data-[selected=true]:data-today:text-primary-foreground",
                         value &&
                           date.compare(value) === 0 &&
-                          "bg-primary text-primary-foreground"
+                          "bg-primary text-primary-foreground",
                       )}
                     />
                   )}
@@ -372,7 +372,7 @@ export function SlotPicker({
         </Popover>
       </AriaDatePicker>
     </DateTimeContext.Provider>
-  )
+  );
 }
 
 /* =========================================================
@@ -385,8 +385,8 @@ const TimeColumn = ({ children }: { children: React.ReactNode }) => {
     <ShadScrollArea className="h-full w-auto">
       <div className="flex flex-col p-2">{children}</div>
     </ShadScrollArea>
-  )
-}
+  );
+};
 
 /* =========================================================
    HOUR / MINUTE / SECOND / AMPM SCROLL COMPONENTS
@@ -394,25 +394,25 @@ const TimeColumn = ({ children }: { children: React.ReactNode }) => {
 
 /* ------------------ HOUR  ------------------ */
 const HourScrollArea = () => {
-  const { value, onChange, granularity, hourCycle, isOpen } = useDateTime()
-  const selectedRef = React.useRef<HTMLButtonElement | null>(null)
+  const { value, onChange, granularity, hourCycle, isOpen } = useDateTime();
+  const selectedRef = React.useRef<HTMLButtonElement | null>(null);
 
   React.useLayoutEffect(() => {
-    if (isOpen) selectedRef.current?.scrollIntoView({ block: "center" })
-  }, [isOpen])
+    if (isOpen) selectedRef.current?.scrollIntoView({ block: "center" });
+  }, [isOpen]);
 
   if (
     granularity !== "hour" &&
     granularity !== "minute" &&
     granularity !== "second"
   ) {
-    return null
+    return null;
   }
 
   return hourCycle === 24 ? (
     <>
       {[...hoursMilitary].map((hour) => {
-        const selected = value && "hour" in value ? value.hour === hour : false
+        const selected = value && "hour" in value ? value.hour === hour : false;
 
         return (
           <ShadButton
@@ -421,21 +421,21 @@ const HourScrollArea = () => {
             variant={selected ? "default" : "ghost"}
             className="h-9 w-9"
             onClick={() => {
-              if (!value || !("hour" in value)) return
-              onChange(value.set({ hour }))
+              if (!value || !("hour" in value)) return;
+              onChange(value.set({ hour }));
             }}
           >
             {hour.toString().padStart(2, "0")}
           </ShadButton>
-        )
+        );
       })}
     </>
   ) : (
     <>
       {[...hours].reverse().map((hour) => {
         const currentHour =
-          value && "hour" in value ? ((value.hour + 11) % 12) + 1 : null
-        const selected = currentHour === hour
+          value && "hour" in value ? ((value.hour + 11) % 12) + 1 : null;
+        const selected = currentHour === hour;
 
         return (
           <ShadButton
@@ -444,39 +444,39 @@ const HourScrollArea = () => {
             variant={selected ? "default" : "ghost"}
             className="h-9 w-9"
             onClick={() => {
-              if (!value || !("hour" in value)) return
+              if (!value || !("hour" in value)) return;
 
-              const isPM = value.hour >= 12
-              let normalizedHour = hour % 12
-              if (isPM) normalizedHour += 12
+              const isPM = value.hour >= 12;
+              let normalizedHour = hour % 12;
+              if (isPM) normalizedHour += 12;
 
-              onChange(value.set({ hour: normalizedHour }))
+              onChange(value.set({ hour: normalizedHour }));
             }}
           >
             {hour.toString().padStart(2, "0")}
           </ShadButton>
-        )
+        );
       })}
     </>
-  )
-}
+  );
+};
 
 /* ---------------- MINUTE ---------------- */
 const MinuteScrollArea = () => {
-  const { value, onChange, granularity, isOpen } = useDateTime()
-  const selectedRef = React.useRef<HTMLButtonElement | null>(null)
+  const { value, onChange, granularity, isOpen } = useDateTime();
+  const selectedRef = React.useRef<HTMLButtonElement | null>(null);
 
   React.useLayoutEffect(() => {
-    if (isOpen) selectedRef.current?.scrollIntoView({ block: "center" })
-  }, [isOpen])
+    if (isOpen) selectedRef.current?.scrollIntoView({ block: "center" });
+  }, [isOpen]);
 
-  if (granularity !== "minute" && granularity !== "second") return null
+  if (granularity !== "minute" && granularity !== "second") return null;
 
   return (
     <>
       {[...minutes].map((min) => {
         const selected =
-          value && "minute" in value ? value.minute === min : false
+          value && "minute" in value ? value.minute === min : false;
 
         return (
           <ShadButton
@@ -485,34 +485,34 @@ const MinuteScrollArea = () => {
             variant={selected ? "default" : "ghost"}
             className="h-9 w-9"
             onClick={() => {
-              if (!value || !("minute" in value)) return
-              onChange(value.set({ minute: min }))
+              if (!value || !("minute" in value)) return;
+              onChange(value.set({ minute: min }));
             }}
           >
             {min.toString().padStart(2, "0")}
           </ShadButton>
-        )
+        );
       })}
     </>
-  )
-}
+  );
+};
 
 /* ---------------- SECOND ---------------- */
 const SecondScrollArea = () => {
-  const { value, onChange, granularity, isOpen } = useDateTime()
-  const selectedRef = React.useRef<HTMLButtonElement | null>(null)
+  const { value, onChange, granularity, isOpen } = useDateTime();
+  const selectedRef = React.useRef<HTMLButtonElement | null>(null);
 
   React.useLayoutEffect(() => {
-    if (isOpen) selectedRef.current?.scrollIntoView({ block: "center" })
-  }, [isOpen])
+    if (isOpen) selectedRef.current?.scrollIntoView({ block: "center" });
+  }, [isOpen]);
 
-  if (granularity !== "second") return null
+  if (granularity !== "second") return null;
 
   return (
     <>
       {[...seconds].map((sec) => {
         const selected =
-          value && "second" in value ? value.second === sec : false
+          value && "second" in value ? value.second === sec : false;
 
         return (
           <ShadButton
@@ -521,21 +521,21 @@ const SecondScrollArea = () => {
             variant={selected ? "default" : "ghost"}
             className="h-9 w-9"
             onClick={() => {
-              if (!value || !("second" in value)) return
-              onChange(value.set({ second: sec }))
+              if (!value || !("second" in value)) return;
+              onChange(value.set({ second: sec }));
             }}
           >
             {sec.toString().padStart(2, "0")}
           </ShadButton>
-        )
+        );
       })}
     </>
-  )
-}
+  );
+};
 
 /* ---------------- AM / PM ---------------- */
 const AmPmScrollArea = () => {
-  const { value, onChange, granularity, hourCycle } = useDateTime()
+  const { value, onChange, granularity, hourCycle } = useDateTime();
 
   if (
     hourCycle !== 12 ||
@@ -543,7 +543,7 @@ const AmPmScrollArea = () => {
       granularity !== "minute" &&
       granularity !== "second")
   ) {
-    return null
+    return null;
   }
 
   return (
@@ -554,7 +554,7 @@ const AmPmScrollArea = () => {
             ? ampm === "AM"
               ? value.hour < 12
               : value.hour >= 12
-            : false
+            : false;
 
         return (
           <ShadButton
@@ -562,36 +562,36 @@ const AmPmScrollArea = () => {
             variant={selected ? "default" : "ghost"}
             className="h-9 w-9"
             onClick={() => {
-              if (!value || !("hour" in value)) return
+              if (!value || !("hour" in value)) return;
 
-              let newHour = value.hour
-              if (ampm === "PM" && newHour < 12) newHour += 12
-              if (ampm === "AM" && newHour >= 12) newHour -= 12
+              let newHour = value.hour;
+              if (ampm === "PM" && newHour < 12) newHour += 12;
+              if (ampm === "AM" && newHour >= 12) newHour -= 12;
 
-              onChange(value.set({ hour: newHour }))
+              onChange(value.set({ hour: newHour }));
             }}
           >
             {ampm}
           </ShadButton>
-        )
+        );
       })}
     </>
-  )
-}
+  );
+};
 
 /* =========================================================
    FOOTER ACTIONS (CLEAR / OK)
 ========================================================= */
 
 const DialogFooter = () => {
-  const { granularity, close, onChange } = useDateTime()
+  const { granularity, close, onChange } = useDateTime();
 
   if (
     granularity !== "hour" &&
     granularity !== "minute" &&
     granularity !== "second"
   ) {
-    return null
+    return null;
   }
 
   return (
@@ -602,8 +602,8 @@ const DialogFooter = () => {
           variant="ghost"
           className="cursor-pointer"
           onClick={() => {
-            onChange(null)
-            close()
+            onChange(null);
+            close();
           }}
         >
           Clear
@@ -617,8 +617,8 @@ const DialogFooter = () => {
         </ShadButton>
       </div>
     </footer>
-  )
-}
+  );
+};
 
 /* =========================================================
    EXPORT MAIN COMPONENTS AS DATEPICKER + DATETIMEPICKER
@@ -627,16 +627,16 @@ const DialogFooter = () => {
 ========================================================= */
 
 const DatePicker = (props: DateTimePickerProps) => {
-  const invalidGranularity = props.pickerProps?.granularity
+  const invalidGranularity = props.pickerProps?.granularity;
 
   // Warn if user tries to pass a granularity other than "day"
   React.useEffect(() => {
     if (invalidGranularity && invalidGranularity !== "day") {
       console.warn(
-        "DatePicker only supports day granularity. Overriding granularity to 'day'."
-      )
+        "DatePicker only supports day granularity. Overriding granularity to 'day'.",
+      );
     }
-  }, [invalidGranularity])
+  }, [invalidGranularity]);
 
   return (
     <SlotPicker
@@ -646,8 +646,8 @@ const DatePicker = (props: DateTimePickerProps) => {
         granularity: "day",
       }}
     />
-  )
-}
+  );
+};
 
 const DateTimePicker = (props: DateTimePickerProps) => (
   <SlotPicker
@@ -657,6 +657,39 @@ const DateTimePicker = (props: DateTimePickerProps) => (
       granularity: props.pickerProps?.granularity ?? "minute",
     }}
   />
-)
+);
 
-export { DatePicker, DateTimePicker }
+export { DatePicker, DateTimePicker };
+
+/* ================EXAMPLE WITH REACT HOOK FORM============
+export const DateTimeField = ({
+  name,
+  label,
+  required,
+  description
+}: DateTimeFieldProps): JSX.Element => {
+  const { control } = useFormContext<InstructionsFormInput>()
+ 
+  return (
+    <Controller
+      control={control}
+      name={name}
+      render={({ field, fieldState }) => (
+        <DateTimePicker
+          label={<Label label={label} required={required} />}
+          description={description}
+          value={field.value}
+          onChange={field.onChange}
+          errorMessage={fieldState.error?.message}
+          pickerProps={{
+            granularity: 'minute',
+            hourCycle: 24,
+            isInvalid: fieldState.invalid,
+            onBlur: field.onBlur
+          }}
+        />
+      )}
+    />
+  )
+}
+  ========================================================= */
