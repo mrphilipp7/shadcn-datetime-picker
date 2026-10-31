@@ -8,7 +8,7 @@ A date and time picker for [shadcn/ui](https://ui.shadcn.com), built on [React A
 npx shadcn@latest add https://raw.githubusercontent.com/mrphilipp7/shadcn-datetime-picker/main/public/r/datetime-picker.json
 ```
 
-This installs `datetime-picker.tsx` and `datetime-picker-context.ts` into your project, plus the `button` and `scroll-area` shadcn components and the `@internationalized/date`, `react-aria-components`, and `lucide-react` dependencies it relies on.
+This installs `datetime-picker.tsx` and `datetime-picker-context.ts` into `components/datetime-picker/` (or `src/components/datetime-picker/` if your project uses a `src` directory), plus the `button` and `scroll-area` shadcn components and the `@internationalized/date`, `react-aria-components`, and `lucide-react` dependencies it relies on.
 
 ## Usage
 
@@ -16,7 +16,7 @@ This installs `datetime-picker.tsx` and `datetime-picker-context.ts` into your p
 import { useState } from "react"
 import { type DateValue } from "react-aria-components"
 
-import { DateTimePicker } from "@/components/ui/datetime-picker"
+import { DateTimePicker } from "@/components/datetime-picker/datetime-picker"
 
 export function Example() {
   const [value, setValue] = useState<DateValue | null>(null)
@@ -64,7 +64,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { type DateValue } from "react-aria-components"
 
-import { DateTimePicker } from "@/components/ui/datetime-picker"
+import { DateTimePicker } from "@/components/datetime-picker/datetime-picker"
 import { Field, FieldSet } from "@/components/ui/field"
 import { Button } from "@/components/ui/button"
 
@@ -123,13 +123,26 @@ export function AppointmentForm() {
 }
 ```
 
-## Maintaining this registry
+## Development
 
-`public/r/*.json` is generated output, not hand-written — it's what the `npx shadcn add` URL above actually serves, with the component source embedded as `content`. After changing `datetime-picker.tsx`, `datetime-picker-context.ts`, or `registry.json`, regenerate it before committing:
+The component source lives in `registry/datetime-picker/`. `components/ui/` and `lib/` are dev-only copies of the shadcn `button`, `scroll-area`, and `cn` dependencies so the component can render locally. They are not shipped.
 
 ```bash
-npx shadcn@latest build
+npm install
+npm run storybook        # http://localhost:6006
 ```
+
+Stories live next to the component in `registry/datetime-picker/datetime-picker.stories.tsx`. Only files listed in `registry.json` are published, so stories never reach users.
+
+### Maintaining this registry
+
+`public/r/*.json` is generated output, not hand-written. It's what the `npx shadcn add` URL above actually serves, with the component source embedded as `content`. After changing anything in `registry/` or `registry.json`, regenerate it before committing:
+
+```bash
+npm run registry:build
+```
+
+Each file's `target` in `registry.json` controls where it installs in the user's project.
 
 ## License
 
