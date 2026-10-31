@@ -5,7 +5,7 @@
   "items": [
     {
       "name": "datetime-picker",
-      "type": "registry:ui",
+      "type": "registry:component",
       "title": "Date Time Picker",
       "description": "A date and time picker for shadcn/ui with a Material UI-inspired experience, supporting calendar selection, time selection, 12/24-hour formats, and configurable granularity.",
       "dependencies": [
@@ -16,12 +16,14 @@
       "registryDependencies": ["button", "scroll-area"],
       "files": [
         {
-          "path": "datetime-picker-context.ts",
-          "type": "registry:ui"
+          "path": "registry/datetime-picker/datetime-picker-context.ts",
+          "type": "registry:component",
+          "target": "components/datetime-picker/datetime-picker-context.ts"
         },
         {
-          "path": "datetime-picker.tsx",
-          "type": "registry:ui"
+          "path": "registry/datetime-picker/datetime-picker.tsx",
+          "type": "registry:component",
+          "target": "components/datetime-picker/datetime-picker.tsx"
         }
       ]
     }
