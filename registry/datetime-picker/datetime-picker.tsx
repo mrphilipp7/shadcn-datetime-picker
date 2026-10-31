@@ -71,6 +71,27 @@ type DateTimePickerProps = {
   value?: DateValue | null;
   onChange?: (value: DateValue | null) => void;
 
+  /* -------------------------------------------------------
+     Form control props — mirror shadcn <Input> so the picker
+     drops into <Field> and form library field bindings
+     (React Hook Form, TanStack Form, Formisch) unchanged.
+  ------------------------------------------------------- */
+
+  /** Pair with <FieldLabel htmlFor={id}> to label the picker. */
+  id?: string;
+  /** Submits the value as an ISO string with native forms. */
+  name?: string;
+  onBlur?: () => void;
+  onFocus?: () => void;
+  autoFocus?: boolean;
+  disabled?: boolean;
+  "aria-invalid"?: boolean | "true" | "false";
+  /**
+   * Resolves to the first editable segment, so form libraries can
+   * focus the picker when validation fails.
+   */
+  ref?: React.Ref<HTMLElement>;
+
   /**
    * Pass-through props to react-aria DatePicker
    * e.g. granularity, minValue, maxValue, hourCycle, etc.
@@ -79,20 +100,77 @@ type DateTimePickerProps = {
 };
 
 /* =========================================================
+   EXTERNAL LABEL
+   Links a <label htmlFor={id}> rendered outside the picker
+   (e.g. shadcn <FieldLabel>). react-aria renders a group, not
+   a labelable element, so the browser can't do it natively.
+========================================================= */
+
+const getFirstSegment = (group: HTMLElement | null) =>
+  group?.querySelector<HTMLElement>('[role="spinbutton"]') ?? null;
+
+function useExternalLabel(
+  id: string | undefined,
+  groupRef: React.RefObject<HTMLDivElement | null>,
+  enabled: boolean,
+) {
+  const [labelId, setLabelId] = React.useState<string>();
+
+  React.useEffect(() => {
+    if (!enabled || !id) return;
+
+    const labelEl = Array.from(document.getElementsByTagName("label")).find(
+      (el) => el.htmlFor === id,
+    );
+    if (!labelEl) return;
+
+    if (!labelEl.id) labelEl.id = `${id}-label`;
+    setLabelId(labelEl.id);
+
+    // Match native label behavior: clicking it focuses the control
+    const focusPicker = () => getFirstSegment(groupRef.current)?.focus();
+    labelEl.addEventListener("click", focusPicker);
+
+    return () => {
+      labelEl.removeEventListener("click", focusPicker);
+      setLabelId(undefined);
+    };
+  }, [id, enabled, groupRef]);
+
+  return labelId;
+}
+
+/* =========================================================
    MAIN COMPONENT
    Date + Time Picker Wrapper
 ========================================================= */
 
 export function SlotPicker({
+  id,
+  name,
   label,
   description,
   errorMessage,
   className,
   value,
   onChange,
+  onBlur,
+  onFocus,
+  autoFocus,
+  disabled,
+  "aria-invalid": ariaInvalid,
+  ref,
   pickerProps,
 }: DateTimePickerProps) {
   const [isOpen, setIsOpen] = React.useState(false);
+  const groupRef = React.useRef<HTMLDivElement>(null);
+
+  const externalLabelId = useExternalLabel(id, groupRef, !label);
+
+  React.useImperativeHandle(
+    ref,
+    () => getFirstSegment(groupRef.current) as HTMLElement,
+  );
 
   /* ---------------------------------------------------------
      Context value shared across calendar + time subcomponents
@@ -136,9 +214,22 @@ export function SlotPicker({
      aria-label when no visible label is provided.
   --------------------------------------------------------- */
 
+  const labelledBy =
+    [pickerProps?.["aria-labelledby"], externalLabelId]
+      .filter(Boolean)
+      .join(" ") || undefined;
+
   const hasAccessibleLabel = Boolean(
-    label || pickerProps?.["aria-label"] || pickerProps?.["aria-labelledby"],
+    label || pickerProps?.["aria-label"] || labelledBy,
   );
+
+  // Only force invalid; leaving it undefined keeps react-aria's own
+  // validation (minValue, maxValue, isRequired) working.
+  const isInvalid =
+    ariaInvalid === true ||
+    ariaInvalid === "true" ||
+    pickerProps?.isInvalid ||
+    undefined;
 
   /* =========================================================
      RENDER
@@ -149,6 +240,14 @@ export function SlotPicker({
       <AriaDatePicker
         {...pickerProps}
         {...(!hasAccessibleLabel && { "aria-label": "Date" })}
+        id={id ?? pickerProps?.id}
+        name={name ?? pickerProps?.name}
+        aria-labelledby={labelledBy}
+        autoFocus={autoFocus ?? pickerProps?.autoFocus}
+        isDisabled={disabled ?? pickerProps?.isDisabled}
+        isInvalid={isInvalid}
+        onBlur={onBlur ?? pickerProps?.onBlur}
+        onFocus={onFocus ?? pickerProps?.onFocus}
         value={value}
         isOpen={isOpen}
         onOpenChange={setIsOpen}
@@ -178,6 +277,7 @@ export function SlotPicker({
             INPUT FIELD
         ===================================================== */}
         <Group
+          ref={groupRef}
           className={cn(
             "relative flex h-9 w-full min-w-0 items-center gap-1 rounded-md border border-input bg-transparent py-1 pr-1 pl-2.5 shadow-xs",
             "text-base transition-[color,box-shadow] outline-none md:text-sm dark:bg-input/30",
@@ -661,36 +761,3 @@ const DateTimePicker = (props: DateTimePickerProps) => (
 );
 
 export { DatePicker, DateTimePicker };
-
-/* ================EXAMPLE WITH REACT HOOK FORM============
-export const DateTimeField = ({
-  name,
-  label,
-  required,
-  description
-}: DateTimeFieldProps): JSX.Element => {
-  const { control } = useFormContext<InstructionsFormInput>()
- 
-  return (
-    <Controller
-      control={control}
-      name={name}
-      render={({ field, fieldState }) => (
-        <DateTimePicker
-          label={<Label label={label} required={required} />}
-          description={description}
-          value={field.value}
-          onChange={field.onChange}
-          errorMessage={fieldState.error?.message}
-          pickerProps={{
-            granularity: 'minute',
-            hourCycle: 24,
-            isInvalid: fieldState.invalid,
-            onBlur: field.onBlur
-          }}
-        />
-      )}
-    />
-  )
-}
-  ========================================================= */
