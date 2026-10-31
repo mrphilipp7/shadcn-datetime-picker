@@ -154,7 +154,10 @@ export function SlotPicker({
         onOpenChange={setIsOpen}
         shouldCloseOnSelect={false}
         onChange={(v) => onChange?.(v)}
-        className={cn("flex flex-col gap-3", className)}
+        className={cn(
+          "group/field flex w-full flex-col gap-3 data-[invalid=true]:text-destructive",
+          className,
+        )}
         shouldForceLeadingZeros={pickerProps?.shouldForceLeadingZeros ?? true}
       >
         {/* =====================================================
@@ -163,9 +166,8 @@ export function SlotPicker({
         {label && (
           <Label
             className={cn(
-              "group/field-label peer/field-label flex w-fit gap-2 text-sm leading-snug font-medium group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-2.5 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10",
-              "has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col",
-              className,
+              "flex w-fit items-center gap-2 text-sm leading-snug font-medium select-none",
+              "group-data-[disabled=true]/field:opacity-50",
             )}
           >
             {label}
@@ -177,27 +179,21 @@ export function SlotPicker({
         ===================================================== */}
         <Group
           className={cn(
-            "relative flex h-9 w-full items-center gap-1 rounded-md border border-input bg-transparent px-2.5 py-1 shadow-xs",
-            "text-sm transition-colors outline-none",
-            "focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50",
-            "disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50",
-            "aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20",
-            "dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
+            "relative flex h-9 w-full min-w-0 items-center gap-1 rounded-md border border-input bg-transparent py-1 pr-1 pl-2.5 shadow-xs",
+            "text-base transition-[color,box-shadow] outline-none md:text-sm dark:bg-input/30",
+            "focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/50",
+            "data-disabled:pointer-events-none data-disabled:cursor-not-allowed data-disabled:opacity-50",
+            "data-invalid:border-destructive data-invalid:ring-destructive/20 dark:data-invalid:ring-destructive/40",
           )}
         >
-          <DateInput
-            className={cn(
-              "flex w-full min-w-0 items-center gap-0.5 text-sm text-foreground",
-              "placeholder:text-muted-foreground",
-            )}
-          >
+          <DateInput className="flex w-full min-w-0 items-center gap-0.5 text-foreground">
             {(segment) => (
               <DateSegment
                 segment={segment}
                 className={cn(
                   "rounded-sm px-0.5 py-0.5 tabular-nums outline-none",
+                  "data-placeholder:text-muted-foreground",
                   "focus:bg-accent focus:text-accent-foreground",
-                  "aria-invalid:text-destructive",
                 )}
               />
             )}
@@ -224,10 +220,9 @@ export function SlotPicker({
           <Text
             slot="description"
             className={cn(
-              "text-left text-sm leading-normal font-normal text-muted-foreground group-has-data-horizontal/field:text-balance [[data-variant=legend]+&]:-mt-1.5",
+              "text-sm leading-normal font-normal text-muted-foreground",
               "last:mt-0 nth-last-2:-mt-1",
               "[&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary",
-              className,
             )}
           >
             {description}
@@ -247,7 +242,13 @@ export function SlotPicker({
             POPUP CALENDAR + TIME PICKER
         ===================================================== */}
         <Popover
-          className="z-50 rounded-md border bg-popover p-4 text-popover-foreground shadow-md"
+          className={cn(
+            "z-50 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-hidden",
+            "data-entering:animate-in data-entering:fade-in-0 data-entering:zoom-in-95",
+            "data-exiting:animate-out data-exiting:fade-out-0 data-exiting:zoom-out-95",
+            "data-[placement=bottom]:slide-in-from-top-2 data-[placement=top]:slide-in-from-bottom-2",
+            "data-[placement=left]:slide-in-from-right-2 data-[placement=right]:slide-in-from-left-2",
+          )}
           shouldCloseOnInteractOutside={(element) => {
             return !element.closest("[data-datetime-picker]");
           }}
