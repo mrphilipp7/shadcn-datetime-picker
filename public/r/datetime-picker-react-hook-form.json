@@ -1,0 +1,26 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "datetime-picker-react-hook-form",
+  "title": "Date Time Picker with React Hook Form",
+  "description": "Example: DateTimePicker in a React Hook Form + Zod form using shadcn Field, with validation errors and focus on error.",
+  "dependencies": [
+    "react-hook-form",
+    "@hookform/resolvers",
+    "zod",
+    "react-aria-components"
+  ],
+  "registryDependencies": [
+    "https://raw.githubusercontent.com/mrphilipp7/shadcn-datetime-picker/main/public/r/datetime-picker.json",
+    "field",
+    "button"
+  ],
+  "files": [
+    {
+      "path": "registry/datetime-picker/examples/react-hook-form-example.tsx",
+      "content": "import { zodResolver } from \"@hookform/resolvers/zod\"\nimport { type DateValue } from \"react-aria-components\"\nimport { Controller, useForm } from \"react-hook-form\"\nimport * as z from \"zod\"\n\nimport { DateTimePicker } from \"@/components/datetime-picker/datetime-picker\"\nimport { Button } from \"@/components/ui/button\"\nimport {\n  Field,\n  FieldDescription,\n  FieldError,\n  FieldGroup,\n  FieldLabel,\n} from \"@/components/ui/field\"\n\nconst formSchema = z.object({\n  appointment: z\n    .custom<DateValue | null>()\n    .refine((value) => value !== null, \"Appointment date and time is required.\"),\n})\n\ntype Props = {\n  /** Receives the validated appointment */\n  onSubmit?: (appointment: DateValue | null) => void\n}\n\nexport function ReactHookFormExample({ onSubmit }: Props) {\n  const form = useForm({\n    resolver: zodResolver(formSchema),\n    defaultValues: { appointment: null },\n  })\n\n  return (\n    <form\n      onSubmit={form.handleSubmit((data) => onSubmit?.(data.appointment))}\n      className=\"flex w-80 flex-col gap-6\"\n    >\n      <FieldGroup>\n        <Controller\n          name=\"appointment\"\n          control={form.control}\n          render={({ field, fieldState }) => (\n            <Field data-invalid={fieldState.invalid}>\n              <FieldLabel htmlFor=\"rhf-appointment\">Appointment</FieldLabel>\n              <DateTimePicker\n                {...field}\n                id=\"rhf-appointment\"\n                aria-invalid={fieldState.invalid}\n              />\n              <FieldDescription>\n                Pick a date and time for your appointment.\n              </FieldDescription>\n              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}\n            </Field>\n          )}\n        />\n      </FieldGroup>\n      <Button type=\"submit\">Submit</Button>\n    </form>\n  )\n}\n",
+      "type": "registry:example",
+      "target": "components/datetime-picker/examples/react-hook-form-example.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

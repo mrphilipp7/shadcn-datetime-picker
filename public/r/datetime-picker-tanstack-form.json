@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "datetime-picker-tanstack-form",
+  "title": "Date Time Picker with TanStack Form",
+  "description": "Example: DateTimePicker in a TanStack Form + Zod form using shadcn Field, with validation errors.",
+  "dependencies": [
+    "@tanstack/react-form",
+    "zod",
+    "react-aria-components"
+  ],
+  "registryDependencies": [
+    "https://raw.githubusercontent.com/mrphilipp7/shadcn-datetime-picker/main/public/r/datetime-picker.json",
+    "field",
+    "button"
+  ],
+  "files": [
+    {
+      "path": "registry/datetime-picker/examples/tanstack-form-example.tsx",
+      "content": "import { useForm } from \"@tanstack/react-form\"\nimport { type DateValue } from \"react-aria-components\"\nimport * as z from \"zod\"\n\nimport { DateTimePicker } from \"@/components/datetime-picker/datetime-picker\"\nimport { Button } from \"@/components/ui/button\"\nimport {\n  Field,\n  FieldDescription,\n  FieldError,\n  FieldGroup,\n  FieldLabel,\n} from \"@/components/ui/field\"\n\nconst formSchema = z.object({\n  appointment: z\n    .custom<DateValue | null>()\n    .refine((value) => value !== null, \"Appointment date and time is required.\"),\n})\n\ntype Props = {\n  /** Receives the validated appointment */\n  onSubmit?: (appointment: DateValue | null) => void\n}\n\nexport function TanStackFormExample({ onSubmit }: Props) {\n  const form = useForm({\n    defaultValues: { appointment: null as DateValue | null },\n    validators: { onSubmit: formSchema },\n    onSubmit: ({ value }) => onSubmit?.(value.appointment),\n  })\n\n  return (\n    <form\n      onSubmit={(e) => {\n        e.preventDefault()\n        form.handleSubmit()\n      }}\n      className=\"flex w-80 flex-col gap-6\"\n    >\n      <FieldGroup>\n        <form.Field\n          name=\"appointment\"\n          children={(field) => {\n            const isInvalid =\n              field.state.meta.isTouched && !field.state.meta.isValid\n            return (\n              <Field data-invalid={isInvalid}>\n                <FieldLabel htmlFor=\"tanstack-appointment\">\n                  Appointment\n                </FieldLabel>\n                <DateTimePicker\n                  id=\"tanstack-appointment\"\n                  name={field.name}\n                  value={field.state.value}\n                  onBlur={field.handleBlur}\n                  onChange={field.handleChange}\n                  aria-invalid={isInvalid}\n                />\n                <FieldDescription>\n                  Pick a date and time for your appointment.\n                </FieldDescription>\n                {isInvalid && <FieldError errors={field.state.meta.errors} />}\n              </Field>\n            )\n          }}\n        />\n      </FieldGroup>\n      <Button type=\"submit\">Submit</Button>\n    </form>\n  )\n}\n",
+      "type": "registry:example",
+      "target": "components/datetime-picker/examples/tanstack-form-example.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

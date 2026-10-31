@@ -13,8 +13,9 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "paths": {
+      "@/components/datetime-picker/*": ["./registry/datetime-picker/*"],
       "@/*": ["./*"]
     }
   },
-  "include": ["registry", "components", "lib", ".storybook", "vite.config.ts"]
+  "include": ["registry", "components", "lib", ".storybook", "vite.config.ts", "vitest.config.ts", "vitest.setup.ts"]
 }
