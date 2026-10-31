@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "datetime-picker-formisch",
+  "title": "Date Time Picker with Formisch",
+  "description": "Example: DateTimePicker in a Formisch + Valibot form using shadcn Field, with validation errors and focus on error.",
+  "dependencies": [
+    "@formisch/react",
+    "valibot",
+    "react-aria-components"
+  ],
+  "registryDependencies": [
+    "https://raw.githubusercontent.com/mrphilipp7/shadcn-datetime-picker/main/public/r/datetime-picker.json",
+    "field",
+    "button"
+  ],
+  "files": [
+    {
+      "path": "registry/datetime-picker/examples/formisch-example.tsx",
+      "content": "import { Form, Field as FormischField, useForm } from \"@formisch/react\"\nimport { type DateValue } from \"react-aria-components\"\nimport * as v from \"valibot\"\n\nimport { DateTimePicker } from \"@/components/datetime-picker/datetime-picker\"\nimport { Button } from \"@/components/ui/button\"\nimport {\n  Field,\n  FieldDescription,\n  FieldError,\n  FieldGroup,\n  FieldLabel,\n} from \"@/components/ui/field\"\n\nconst FormSchema = v.object({\n  appointment: v.pipe(\n    v.custom<DateValue | null>(() => true),\n    v.check((value) => value !== null, \"Appointment date and time is required.\")\n  ),\n})\n\ntype Props = {\n  /** Receives the validated appointment */\n  onSubmit?: (appointment: DateValue | null) => void\n}\n\nexport function FormischExample({ onSubmit }: Props) {\n  const form = useForm({\n    schema: FormSchema,\n    initialInput: { appointment: null },\n  })\n\n  return (\n    <Form\n      of={form}\n      onSubmit={(output) => onSubmit?.(output.appointment)}\n      className=\"flex w-80 flex-col gap-6\"\n    >\n      <FieldGroup>\n        <FormischField of={form} path={[\"appointment\"]}>\n          {(field) => (\n            <Field data-invalid={field.errors !== null}>\n              <FieldLabel htmlFor=\"formisch-appointment\">Appointment</FieldLabel>\n              <DateTimePicker\n                {...field.props}\n                id=\"formisch-appointment\"\n                value={field.input ?? null}\n                onChange={field.onChange}\n                aria-invalid={field.errors !== null}\n              />\n              <FieldDescription>\n                Pick a date and time for your appointment.\n              </FieldDescription>\n              {field.errors && (\n                <FieldError\n                  errors={field.errors.map((message) => ({ message }))}\n                />\n              )}\n            </Field>\n          )}\n        </FormischField>\n      </FieldGroup>\n      <Button type=\"submit\">Submit</Button>\n    </Form>\n  )\n}\n",
+      "type": "registry:example",
+      "target": "components/datetime-picker/examples/formisch-example.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

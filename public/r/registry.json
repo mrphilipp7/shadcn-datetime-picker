@@ -13,7 +13,10 @@
         "react-aria-components",
         "lucide-react"
       ],
-      "registryDependencies": ["button", "scroll-area"],
+      "registryDependencies": [
+        "button",
+        "scroll-area"
+      ],
       "files": [
         {
           "path": "registry/datetime-picker/datetime-picker-context.ts",
@@ -24,6 +27,97 @@
           "path": "registry/datetime-picker/datetime-picker.tsx",
           "type": "registry:component",
           "target": "components/datetime-picker/datetime-picker.tsx"
+        }
+      ],
+      "docs": "Import from @/components/datetime-picker/datetime-picker. Values are @internationalized/date DateValue objects; always pass value (null when empty). Inside a shadcn <Field>, give the picker an id and use <FieldLabel htmlFor={id}> instead of the label prop. onChange receives the value, not an event. React Hook Form: <DateTimePicker {...field} id aria-invalid={fieldState.invalid} />. TanStack Form: value={field.state.value} onChange={field.handleChange} onBlur={field.handleBlur}. Formisch: <DateTimePicker {...field.props} value={field.input ?? null} onChange={field.onChange} />. Examples: add datetime-picker-demo, datetime-picker-react-hook-form, datetime-picker-tanstack-form, or datetime-picker-formisch from this registry. Docs: https://github.com/mrphilipp7/shadcn-datetime-picker#readme"
+    },
+    {
+      "name": "datetime-picker-demo",
+      "type": "registry:example",
+      "title": "Date Time Picker Demo",
+      "description": "Example: DatePicker and DateTimePicker composed with shadcn Field and FieldLabel.",
+      "dependencies": [
+        "react-aria-components"
+      ],
+      "registryDependencies": [
+        "https://raw.githubusercontent.com/mrphilipp7/shadcn-datetime-picker/main/public/r/datetime-picker.json",
+        "field"
+      ],
+      "files": [
+        {
+          "path": "registry/datetime-picker/examples/datetime-picker-demo.tsx",
+          "type": "registry:example",
+          "target": "components/datetime-picker/examples/datetime-picker-demo.tsx"
+        }
+      ]
+    },
+    {
+      "name": "datetime-picker-react-hook-form",
+      "type": "registry:example",
+      "title": "Date Time Picker with React Hook Form",
+      "description": "Example: DateTimePicker in a React Hook Form + Zod form using shadcn Field, with validation errors and focus on error.",
+      "dependencies": [
+        "react-hook-form",
+        "@hookform/resolvers",
+        "zod",
+        "react-aria-components"
+      ],
+      "registryDependencies": [
+        "https://raw.githubusercontent.com/mrphilipp7/shadcn-datetime-picker/main/public/r/datetime-picker.json",
+        "field",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "registry/datetime-picker/examples/react-hook-form-example.tsx",
+          "type": "registry:example",
+          "target": "components/datetime-picker/examples/react-hook-form-example.tsx"
+        }
+      ]
+    },
+    {
+      "name": "datetime-picker-tanstack-form",
+      "type": "registry:example",
+      "title": "Date Time Picker with TanStack Form",
+      "description": "Example: DateTimePicker in a TanStack Form + Zod form using shadcn Field, with validation errors.",
+      "dependencies": [
+        "@tanstack/react-form",
+        "zod",
+        "react-aria-components"
+      ],
+      "registryDependencies": [
+        "https://raw.githubusercontent.com/mrphilipp7/shadcn-datetime-picker/main/public/r/datetime-picker.json",
+        "field",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "registry/datetime-picker/examples/tanstack-form-example.tsx",
+          "type": "registry:example",
+          "target": "components/datetime-picker/examples/tanstack-form-example.tsx"
+        }
+      ]
+    },
+    {
+      "name": "datetime-picker-formisch",
+      "type": "registry:example",
+      "title": "Date Time Picker with Formisch",
+      "description": "Example: DateTimePicker in a Formisch + Valibot form using shadcn Field, with validation errors and focus on error.",
+      "dependencies": [
+        "@formisch/react",
+        "valibot",
+        "react-aria-components"
+      ],
+      "registryDependencies": [
+        "https://raw.githubusercontent.com/mrphilipp7/shadcn-datetime-picker/main/public/r/datetime-picker.json",
+        "field",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "registry/datetime-picker/examples/formisch-example.tsx",
+          "type": "registry:example",
+          "target": "components/datetime-picker/examples/formisch-example.tsx"
         }
       ]
     }

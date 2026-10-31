@@ -1,6 +1,8 @@
 import { useForm } from "@tanstack/react-form"
 import { type DateValue } from "react-aria-components"
+import * as z from "zod"
 
+import { DateTimePicker } from "@/components/datetime-picker/datetime-picker"
 import { Button } from "@/components/ui/button"
 import {
   Field,
@@ -10,13 +12,21 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 
-import { DateTimePicker } from "../datetime-picker"
-import { type ExampleFormProps, zodSchema } from "./schema"
+const formSchema = z.object({
+  appointment: z
+    .custom<DateValue | null>()
+    .refine((value) => value !== null, "Appointment date and time is required."),
+})
 
-export function TanStackFormExample({ onSubmit }: ExampleFormProps) {
+type Props = {
+  /** Receives the validated appointment */
+  onSubmit?: (appointment: DateValue | null) => void
+}
+
+export function TanStackFormExample({ onSubmit }: Props) {
   const form = useForm({
     defaultValues: { appointment: null as DateValue | null },
-    validators: { onSubmit: zodSchema },
+    validators: { onSubmit: formSchema },
     onSubmit: ({ value }) => onSubmit?.(value.appointment),
   })
 

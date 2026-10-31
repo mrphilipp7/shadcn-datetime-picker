@@ -274,6 +274,36 @@ export function AppointmentForm() {
 }
 ```
 
+## Examples and AI assistants
+
+The registry publishes a ready-to-use example for each setup:
+
+| Item | What it shows |
+| ---- | ------------- |
+| `datetime-picker-demo` | `DatePicker` and `DateTimePicker` inside shadcn `Field` |
+| `datetime-picker-react-hook-form` | React Hook Form + Zod |
+| `datetime-picker-tanstack-form` | TanStack Form + Zod |
+| `datetime-picker-formisch` | Formisch + Valibot |
+
+To use them, add this registry to your `components.json`:
+
+```json
+{
+  "registries": {
+    "@mrphilipp7": "https://raw.githubusercontent.com/mrphilipp7/shadcn-datetime-picker/main/public/r/{name}.json"
+  }
+}
+```
+
+Then you can install by name. Examples install to `components/datetime-picker/examples/` and pull in the picker and only that example's form library:
+
+```bash
+npx shadcn@latest add @mrphilipp7/datetime-picker
+npx shadcn@latest add @mrphilipp7/datetime-picker-react-hook-form
+```
+
+**AI assistants.** With the registry configured, the [shadcn MCP server](https://ui.shadcn.com/docs/mcp) (`npx shadcn@latest mcp init`) lets Claude Code, Cursor, and other MCP clients search this registry and pull the matching example for your form library. The installed component also carries JSDoc covering `Field` composition and the wiring for each form library, so assistants that read your codebase pick it up without any setup.
+
 ## Development
 
 The component source lives in `registry/datetime-picker/`. `components/ui/` and `lib/` are dev-only copies of the shadcn components and `cn` helper the component and examples depend on, so everything can render locally. They are not shipped.
@@ -284,7 +314,7 @@ npm run storybook        # http://localhost:6006
 npm test                 # Vitest + Testing Library
 ```
 
-Stories and tests live next to the component. `registry/datetime-picker/examples/` holds one form per supported library; the **DateTime Picker → Forms** stories render them, and `datetime-picker.test.tsx` drives them the way a user would (typing, picking from the popover, submitting, validation errors, focus on error). Only files listed in `registry.json` are published, so stories, tests, and examples never reach users.
+Stories and tests live next to the component. `registry/datetime-picker/examples/` holds one form per supported library; the **DateTime Picker → Forms** stories render them, and `datetime-picker.test.tsx` drives them the way a user would (typing, picking from the popover, submitting, validation errors, focus on error). The examples are also published as registry items (see above). Stories and tests aren't listed in `registry.json`, so they never reach users. Examples import the picker from `@/components/datetime-picker/datetime-picker`, the path it installs to, which `tsconfig.json` and the Vite configs map to `registry/datetime-picker/`.
 
 ### Maintaining this registry
 

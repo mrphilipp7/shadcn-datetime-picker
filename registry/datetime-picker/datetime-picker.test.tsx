@@ -9,8 +9,13 @@ import { Field, FieldLabel } from "@/components/ui/field"
 import { DateTimePicker } from "./datetime-picker"
 import { FormischExample } from "./examples/formisch-example"
 import { ReactHookFormExample } from "./examples/react-hook-form-example"
-import { REQUIRED_MESSAGE, type ExampleFormProps } from "./examples/schema"
 import { TanStackFormExample } from "./examples/tanstack-form-example"
+
+const REQUIRED_MESSAGE = "Appointment date and time is required."
+
+type ExampleForm = (props: {
+  onSubmit?: (appointment: DateValue | null) => void
+}) => React.ReactNode
 
 const getPicker = () => screen.getByRole("group", { name: "Appointment" })
 const getSegment = (name: RegExp) =>
@@ -91,7 +96,7 @@ describe("Field composition", () => {
 
 const examples: Array<{
   name: string
-  Example: (props: ExampleFormProps) => React.ReactNode
+  Example: ExampleForm
   focusesOnError: boolean
 }> = [
   { name: "React Hook Form", Example: ReactHookFormExample, focusesOnError: true },

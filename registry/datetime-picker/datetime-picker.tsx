@@ -1,5 +1,34 @@
 "use client";
 
+/**
+ * DateTime Picker — a shadcn/ui-styled date and time picker built on
+ * React Aria Components.
+ *
+ * Exports:
+ * - `DatePicker`     — calendar only (day granularity).
+ * - `DateTimePicker` — calendar + time columns (minute granularity by default).
+ *
+ * Values are `DateValue` objects from `@internationalized/date`, not JS
+ * `Date`s. Use `parseDate("2026-03-14")` / `parseDateTime("2026-03-14T15:09")`
+ * to create one and `value.toString()` to get an ISO string. Always pass
+ * `value` (use `null` for empty) — the picker is controlled only.
+ *
+ * Inside a shadcn `<Field>`, use it like `<Input>`: give it an `id`, point
+ * `<FieldLabel htmlFor>` at it, and skip the `label` / `description` /
+ * `errorMessage` props. Form libraries (React Hook Form, TanStack Form,
+ * Formisch) wire it exactly like shadcn's `<Input>` docs, except `onChange`
+ * receives the value directly instead of an event:
+ *
+ * - React Hook Form: `<DateTimePicker {...field} id="x" aria-invalid={fieldState.invalid} />`
+ * - TanStack Form:   `value={field.state.value} onChange={field.handleChange} onBlur={field.handleBlur}`
+ * - Formisch:        `<DateTimePicker {...field.props} value={field.input ?? null} onChange={field.onChange} />`
+ *
+ * Validate with a custom schema type, e.g.
+ * `z.custom<DateValue | null>().refine((v) => v !== null, "Required")`.
+ *
+ * Full examples: https://github.com/mrphilipp7/shadcn-datetime-picker#forms
+ */
+
 import {
   Button,
   CalendarCell,
@@ -64,11 +93,29 @@ type PickerProps = Omit<
 >;
 
 type DateTimePickerProps = {
+  /**
+   * Built-in visible label. When composing with shadcn `<Field>`, omit
+   * this and use `<FieldLabel htmlFor={id}>` instead.
+   */
   label?: string;
+  /** Built-in helper text. With `<Field>`, use `<FieldDescription>` instead. */
   description?: string;
+  /** Built-in error text. With `<Field>`, use `<FieldError>` instead. */
   errorMessage?: string;
+  /** Applied to the root element. */
   className?: string;
+  /**
+   * Controlled value, a `DateValue` from `@internationalized/date`
+   * (`CalendarDate` for `DatePicker`, `CalendarDateTime` for
+   * `DateTimePicker`). Pass `null` when empty; never omit it.
+   */
   value?: DateValue | null;
+  /**
+   * Called with the new value (not an event) on every date or time change,
+   * and with `null` when cleared. Pass a form library's setter directly:
+   * RHF `field.onChange`, TanStack `field.handleChange`, Formisch
+   * `field.onChange`.
+   */
   onChange?: (value: DateValue | null) => void;
 
   /* -------------------------------------------------------
@@ -77,14 +124,28 @@ type DateTimePickerProps = {
      (React Hook Form, TanStack Form, Formisch) unchanged.
   ------------------------------------------------------- */
 
-  /** Pair with <FieldLabel htmlFor={id}> to label the picker. */
+  /**
+   * Pair with `<FieldLabel htmlFor={id}>` to label the picker. Clicking
+   * the label focuses the picker. Must be unique on the page.
+   */
   id?: string;
   /** Submits the value as an ISO string with native forms. */
   name?: string;
+  /**
+   * Called when focus leaves the picker. Moving focus into the calendar
+   * popover does not count, so opening it won't mark the field touched.
+   */
   onBlur?: () => void;
+  /** Called when focus enters the picker. */
   onFocus?: () => void;
+  /** Focuses the first segment on mount. */
   autoFocus?: boolean;
+  /** Disables the picker. Mapped to React Aria's `isDisabled`. */
   disabled?: boolean;
+  /**
+   * Shows the invalid styling. Set it from the form library's error state,
+   * and set `data-invalid` on the surrounding `<Field>` to match.
+   */
   "aria-invalid"?: boolean | "true" | "false";
   /**
    * Resolves to the first editable segment, so form libraries can
@@ -95,6 +156,9 @@ type DateTimePickerProps = {
   /**
    * Pass-through props to react-aria DatePicker
    * e.g. granularity, minValue, maxValue, hourCycle, etc.
+   *
+   * @example
+   * pickerProps={{ granularity: "second", hourCycle: 24, minValue: today(getLocalTimeZone()) }}
    */
   pickerProps?: PickerProps;
 };
@@ -145,6 +209,11 @@ function useExternalLabel(
    Date + Time Picker Wrapper
 ========================================================= */
 
+/**
+ * Shared implementation behind `DatePicker` and `DateTimePicker`.
+ * Prefer those two exports in app code.
+ * @internal
+ */
 export function SlotPicker({
   id,
   name,
@@ -727,6 +796,18 @@ const DialogFooter = () => {
     - DateTimePicker = day + time granularity (default: minute)
 ========================================================= */
 
+/**
+ * Date-only picker: segmented input plus a calendar popover. Selecting a
+ * day closes the popover. Produces a `CalendarDate` (e.g. `2026-03-14`).
+ *
+ * @example
+ * const [value, setValue] = useState<DateValue | null>(null)
+ *
+ * <Field>
+ *   <FieldLabel htmlFor="birthday">Birthday</FieldLabel>
+ *   <DatePicker id="birthday" value={value} onChange={setValue} />
+ * </Field>
+ */
 const DatePicker = (props: DateTimePickerProps) => {
   const invalidGranularity = props.pickerProps?.granularity;
 
@@ -750,6 +831,28 @@ const DatePicker = (props: DateTimePickerProps) => {
   );
 };
 
+/**
+ * Date and time picker: segmented input plus a calendar and scrollable
+ * hour / minute / (second) / (AM-PM) columns, with Clear and Ok actions.
+ * Produces a `CalendarDateTime` (e.g. `2026-03-14T15:09:00`).
+ *
+ * Defaults to minute granularity and a 12-hour clock; change with
+ * `pickerProps={{ granularity: "hour" | "minute" | "second", hourCycle: 12 | 24 }}`.
+ *
+ * @example
+ * // React Hook Form + shadcn Field
+ * <Controller
+ *   name="appointment"
+ *   control={form.control}
+ *   render={({ field, fieldState }) => (
+ *     <Field data-invalid={fieldState.invalid}>
+ *       <FieldLabel htmlFor="appointment">Appointment</FieldLabel>
+ *       <DateTimePicker {...field} id="appointment" aria-invalid={fieldState.invalid} />
+ *       {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+ *     </Field>
+ *   )}
+ * />
+ */
 const DateTimePicker = (props: DateTimePickerProps) => (
   <SlotPicker
     {...props}
@@ -761,3 +864,4 @@ const DateTimePicker = (props: DateTimePickerProps) => (
 );
 
 export { DatePicker, DateTimePicker };
+export type { DateTimePickerProps };

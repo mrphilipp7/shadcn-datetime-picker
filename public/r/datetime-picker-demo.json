@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "datetime-picker-demo",
+  "title": "Date Time Picker Demo",
+  "description": "Example: DatePicker and DateTimePicker composed with shadcn Field and FieldLabel.",
+  "dependencies": [
+    "react-aria-components"
+  ],
+  "registryDependencies": [
+    "https://raw.githubusercontent.com/mrphilipp7/shadcn-datetime-picker/main/public/r/datetime-picker.json",
+    "field"
+  ],
+  "files": [
+    {
+      "path": "registry/datetime-picker/examples/datetime-picker-demo.tsx",
+      "content": "import { useState } from \"react\"\nimport { type DateValue } from \"react-aria-components\"\n\nimport {\n  DatePicker,\n  DateTimePicker,\n} from \"@/components/datetime-picker/datetime-picker\"\nimport {\n  Field,\n  FieldDescription,\n  FieldGroup,\n  FieldLabel,\n} from \"@/components/ui/field\"\n\nexport function DateTimePickerDemo() {\n  const [date, setDate] = useState<DateValue | null>(null)\n  const [appointment, setAppointment] = useState<DateValue | null>(null)\n\n  return (\n    <FieldGroup className=\"w-80\">\n      <Field>\n        <FieldLabel htmlFor=\"demo-date\">Date</FieldLabel>\n        <DatePicker id=\"demo-date\" value={date} onChange={setDate} />\n      </Field>\n      <Field>\n        <FieldLabel htmlFor=\"demo-appointment\">Appointment</FieldLabel>\n        <DateTimePicker\n          id=\"demo-appointment\"\n          value={appointment}\n          onChange={setAppointment}\n          pickerProps={{ hourCycle: 24 }}\n        />\n        <FieldDescription>\n          Pick a date and time for your appointment.\n        </FieldDescription>\n      </Field>\n    </FieldGroup>\n  )\n}\n",
+      "type": "registry:example",
+      "target": "components/datetime-picker/examples/datetime-picker-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

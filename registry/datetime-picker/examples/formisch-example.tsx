@@ -1,5 +1,8 @@
 import { Form, Field as FormischField, useForm } from "@formisch/react"
+import { type DateValue } from "react-aria-components"
+import * as v from "valibot"
 
+import { DateTimePicker } from "@/components/datetime-picker/datetime-picker"
 import { Button } from "@/components/ui/button"
 import {
   Field,
@@ -9,12 +12,21 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 
-import { DateTimePicker } from "../datetime-picker"
-import { type ExampleFormProps, valibotSchema } from "./schema"
+const FormSchema = v.object({
+  appointment: v.pipe(
+    v.custom<DateValue | null>(() => true),
+    v.check((value) => value !== null, "Appointment date and time is required.")
+  ),
+})
 
-export function FormischExample({ onSubmit }: ExampleFormProps) {
+type Props = {
+  /** Receives the validated appointment */
+  onSubmit?: (appointment: DateValue | null) => void
+}
+
+export function FormischExample({ onSubmit }: Props) {
   const form = useForm({
-    schema: valibotSchema,
+    schema: FormSchema,
     initialInput: { appointment: null },
   })
 
