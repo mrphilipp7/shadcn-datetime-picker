@@ -2,6 +2,14 @@
 
 A date and time picker for [shadcn/ui](https://ui.shadcn.com), built on [React Aria Components](https://react-spectrum.adobe.com/react-aria/DatePicker.html). Combines calendar selection with scrollable hour/minute/second/AM-PM columns, supports 12/24-hour formats, and lets you dial in exactly how much granularity you need — day only, or down to the second.
 
+## Preview
+
+Designed to sit alongside shadcn's `Input` and `Field` components with matching layout, spacing, and states.
+
+![DateTimePicker next to a shadcn Input + Field in the default state](./assets/default-sidebyside.png)
+
+![DateTimePicker next to a shadcn Input + Field in the invalid state](./assets/error-sidebyside.png)
+
 ## Installation
 
 ```bash
