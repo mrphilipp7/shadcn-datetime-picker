@@ -5,7 +5,7 @@
   "items": [
     {
       "name": "datetime-picker",
-      "type": "registry:component",
+      "type": "registry:ui",
       "title": "Date Time Picker",
       "description": "A date and time picker for shadcn/ui with a Material UI-inspired experience, supporting calendar selection, time selection, 12/24-hour formats, and configurable granularity.",
       "dependencies": [
@@ -18,17 +18,12 @@
       ],
       "files": [
         {
-          "path": "registry/datetime-picker/datetime-picker-context.ts",
-          "type": "registry:component",
-          "target": "components/datetime-picker/datetime-picker-context.ts"
-        },
-        {
           "path": "registry/datetime-picker/datetime-picker.tsx",
-          "type": "registry:component",
-          "target": "components/datetime-picker/datetime-picker.tsx"
+          "type": "registry:ui",
+          "target": "components/ui/datetime-picker.tsx"
         }
       ],
-      "docs": "Import from @/components/datetime-picker/datetime-picker. Values are @internationalized/date DateValue objects; always pass value (null when empty). Inside a shadcn <Field>, give the picker an id and use <FieldLabel htmlFor={id}> instead of the label prop. onChange receives the value, not an event. React Hook Form: <DateTimePicker {...field} id aria-invalid={fieldState.invalid} />. TanStack Form: value={field.state.value} onChange={field.handleChange} onBlur={field.handleBlur}. Formisch: <DateTimePicker {...field.props} value={field.input ?? null} onChange={field.onChange} />. Examples: add datetime-picker-demo, datetime-picker-react-hook-form, datetime-picker-tanstack-form, or datetime-picker-formisch from this registry. Docs: https://github.com/mrphilipp7/shadcn-datetime-picker#readme"
+      "docs": "Import from @/components/ui/datetime-picker. Values are @internationalized/date DateValue objects; always pass value (null when empty). Inside a shadcn <Field>, give the picker an id and use <FieldLabel htmlFor={id}> instead of the label prop. onChange receives the value, not an event. React Hook Form: <DateTimePicker {...field} id aria-invalid={fieldState.invalid} />. TanStack Form: value={field.state.value} onChange={field.handleChange} onBlur={field.handleBlur}. Formisch: <DateTimePicker {...field.props} value={field.input ?? null} onChange={field.onChange} />. Examples: add datetime-picker-demo, datetime-picker-react-hook-form, datetime-picker-tanstack-form, or datetime-picker-formisch from this registry. Docs: https://github.com/mrphilipp7/shadcn-datetime-picker#readme"
     },
     {
       "name": "datetime-picker-demo",
@@ -46,7 +41,7 @@
         {
           "path": "registry/datetime-picker/examples/datetime-picker-demo.tsx",
           "type": "registry:example",
-          "target": "components/datetime-picker/examples/datetime-picker-demo.tsx"
+          "target": "components/datetime-picker-examples/datetime-picker-demo.tsx"
         }
       ]
     },
@@ -70,7 +65,7 @@
         {
           "path": "registry/datetime-picker/examples/react-hook-form-example.tsx",
           "type": "registry:example",
-          "target": "components/datetime-picker/examples/react-hook-form-example.tsx"
+          "target": "components/datetime-picker-examples/react-hook-form-example.tsx"
         }
       ]
     },
@@ -93,7 +88,7 @@
         {
           "path": "registry/datetime-picker/examples/tanstack-form-example.tsx",
           "type": "registry:example",
-          "target": "components/datetime-picker/examples/tanstack-form-example.tsx"
+          "target": "components/datetime-picker-examples/tanstack-form-example.tsx"
         }
       ]
     },
@@ -116,7 +111,7 @@
         {
           "path": "registry/datetime-picker/examples/formisch-example.tsx",
           "type": "registry:example",
-          "target": "components/datetime-picker/examples/formisch-example.tsx"
+          "target": "components/datetime-picker-examples/formisch-example.tsx"
         }
       ]
     }

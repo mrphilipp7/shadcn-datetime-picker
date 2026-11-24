@@ -4,7 +4,7 @@ import { type DateValue } from "react-aria-components"
 import {
   DatePicker,
   DateTimePicker,
-} from "@/components/datetime-picker/datetime-picker"
+} from "@/components/ui/datetime-picker"
 import {
   Field,
   FieldDescription,

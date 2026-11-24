@@ -16,7 +16,9 @@ Designed to sit alongside shadcn's `Input` and `Field` components with matching 
 npx shadcn@latest add https://raw.githubusercontent.com/mrphilipp7/shadcn-datetime-picker/main/public/r/datetime-picker.json
 ```
 
-This installs `datetime-picker.tsx` and `datetime-picker-context.ts` into `components/datetime-picker/` (or `src/components/datetime-picker/` if your project uses a `src` directory), plus the `button` and `scroll-area` shadcn components and the `@internationalized/date` and `react-aria-components` dependencies it relies on. Icons are inlined as SVGs, so no icon library is required.
+This installs a single file, `components/ui/datetime-picker.tsx` (or `src/components/ui/datetime-picker.tsx` if your project uses a `src` directory), plus the `button` and `scroll-area` shadcn components and the `@internationalized/date` and `react-aria-components` dependencies it relies on. Icons are inlined as SVGs, so no icon library is required.
+
+> **Upgrading from an earlier version?** The picker used to install to `components/datetime-picker/` as two files. After reinstalling, delete that folder (`datetime-picker.tsx` and `datetime-picker-context.ts`) and change imports from `@/components/datetime-picker/datetime-picker` to `@/components/ui/datetime-picker`.
 
 ## Usage
 
@@ -24,7 +26,7 @@ This installs `datetime-picker.tsx` and `datetime-picker-context.ts` into `compo
 import { useState } from "react"
 import { type DateValue } from "react-aria-components"
 
-import { DateTimePicker } from "@/components/datetime-picker/datetime-picker"
+import { DateTimePicker } from "@/components/ui/datetime-picker"
 
 export function Example() {
   const [value, setValue] = useState<DateValue | null>(null)
@@ -105,7 +107,7 @@ import { type DateValue } from "react-aria-components"
 import { Controller, useForm } from "react-hook-form"
 import * as z from "zod"
 
-import { DateTimePicker } from "@/components/datetime-picker/datetime-picker"
+import { DateTimePicker } from "@/components/ui/datetime-picker"
 import { Button } from "@/components/ui/button"
 import {
   Field,
@@ -295,7 +297,7 @@ To use them, add this registry to your `components.json`:
 }
 ```
 
-Then you can install by name. Examples install to `components/datetime-picker/examples/` and pull in the picker and only that example's form library:
+Then you can install by name. Examples install to `components/datetime-picker-examples/` and pull in the picker and only that example's form library:
 
 ```bash
 npx shadcn@latest add @mrphilipp7/datetime-picker
@@ -314,7 +316,7 @@ npm run storybook        # http://localhost:6006
 npm test                 # Vitest + Testing Library
 ```
 
-Stories and tests live next to the component. `registry/datetime-picker/examples/` holds one form per supported library; the **DateTime Picker → Forms** stories render them, and `datetime-picker.test.tsx` drives them the way a user would (typing, picking from the popover, submitting, validation errors, focus on error). The examples are also published as registry items (see above). Stories and tests aren't listed in `registry.json`, so they never reach users. Examples import the picker from `@/components/datetime-picker/datetime-picker`, the path it installs to, which `tsconfig.json` and the Vite configs map to `registry/datetime-picker/`.
+Stories and tests live next to the component. `registry/datetime-picker/examples/` holds one form per supported library; the **DateTime Picker → Forms** stories render them, and `datetime-picker.test.tsx` drives them the way a user would (typing, picking from the popover, submitting, validation errors, focus on error). The examples are also published as registry items (see above). Stories and tests aren't listed in `registry.json`, so they never reach users. Examples import the picker from `@/components/ui/datetime-picker`, the path it installs to, which `tsconfig.json` and the Vite configs map to `registry/datetime-picker/datetime-picker.tsx`.
 
 ### Maintaining this registry
 

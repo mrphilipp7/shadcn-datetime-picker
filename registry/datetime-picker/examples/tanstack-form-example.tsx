@@ -2,7 +2,7 @@ import { useForm } from "@tanstack/react-form"
 import { type DateValue } from "react-aria-components"
 import * as z from "zod"
 
-import { DateTimePicker } from "@/components/datetime-picker/datetime-picker"
+import { DateTimePicker } from "@/components/ui/datetime-picker"
 import { Button } from "@/components/ui/button"
 import {
   Field,
