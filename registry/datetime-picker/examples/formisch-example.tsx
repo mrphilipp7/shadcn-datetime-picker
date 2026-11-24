@@ -2,7 +2,7 @@ import { Form, Field as FormischField, useForm } from "@formisch/react"
 import { type DateValue } from "react-aria-components"
 import * as v from "valibot"
 
-import { DateTimePicker } from "@/components/datetime-picker/datetime-picker"
+import { DateTimePicker } from "@/components/ui/datetime-picker"
 import { Button } from "@/components/ui/button"
 import {
   Field,

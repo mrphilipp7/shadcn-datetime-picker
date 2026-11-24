@@ -3,7 +3,7 @@ import { type DateValue } from "react-aria-components"
 import { Controller, useForm } from "react-hook-form"
 import * as z from "zod"
 
-import { DateTimePicker } from "@/components/datetime-picker/datetime-picker"
+import { DateTimePicker } from "@/components/ui/datetime-picker"
 import { Button } from "@/components/ui/button"
 import {
   Field,

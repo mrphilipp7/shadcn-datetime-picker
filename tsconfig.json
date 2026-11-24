@@ -13,7 +13,7 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "paths": {
-      "@/components/datetime-picker/*": ["./registry/datetime-picker/*"],
+      "@/components/ui/datetime-picker": ["./registry/datetime-picker/datetime-picker.tsx"],
       "@/*": ["./*"]
     }
   },

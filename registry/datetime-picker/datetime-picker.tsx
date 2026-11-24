@@ -61,7 +61,28 @@ import {
   getLocalTimeZone,
 } from "@internationalized/date";
 
-import { DateTimeContext, useDateTime } from "./datetime-picker-context";
+/* =========================================================
+   CONTEXT
+   Internal: shares picker state with the time-column subcomponents.
+   Not exported, so it can't be used outside the picker.
+========================================================= */
+
+type DateTimeContextValue = {
+  value: DateValue | null;
+  onChange: (v: DateValue | null) => void;
+  granularity?: "day" | "hour" | "minute" | "second";
+  hourCycle?: 12 | 24;
+  close: () => void;
+  isOpen: boolean;
+};
+
+const DateTimeContext = React.createContext<DateTimeContextValue | null>(null);
+
+function useDateTime() {
+  const ctx = React.useContext(DateTimeContext);
+  if (!ctx) throw new Error("useDateTime must be used within a DateTimePicker");
+  return ctx;
+}
 
 /* =========================================================
    ICONS
@@ -268,7 +289,7 @@ function useExternalLabel(
  * Prefer those two exports in app code.
  * @internal
  */
-export function SlotPicker({
+function SlotPicker({
   id,
   name,
   label,

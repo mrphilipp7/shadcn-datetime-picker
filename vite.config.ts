@@ -10,8 +10,11 @@ export default defineConfig({
     // project; point that at the registry source here.
     alias: [
       {
-        find: "@/components/datetime-picker",
-        replacement: path.resolve(import.meta.dirname, "registry/datetime-picker"),
+        find: /^@\/components\/ui\/datetime-picker$/,
+        replacement: path.resolve(
+          import.meta.dirname,
+          "registry/datetime-picker/datetime-picker.tsx",
+        ),
       },
       { find: "@", replacement: path.resolve(import.meta.dirname) },
     ],
