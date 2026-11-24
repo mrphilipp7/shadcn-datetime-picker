@@ -500,13 +500,7 @@ function SlotPicker({
           <Dialog className="outline-none">
             <div
               data-datetime-picker
-              className="flex flex-row overflow-hidden"
-              style={
-                {
-                  maxHeight:
-                    "var(--radix-popover-content-available-height, 600px)",
-                } as React.CSSProperties
-              }
+              className="flex max-h-[600px] flex-row overflow-hidden"
             >
               {/* ---------------- CALENDAR ---------------- */}
               <Calendar
