@@ -10,8 +10,7 @@
       "description": "A date and time picker for shadcn/ui with a Material UI-inspired experience, supporting calendar selection, time selection, 12/24-hour formats, and configurable granularity.",
       "dependencies": [
         "@internationalized/date",
-        "react-aria-components",
-        "lucide-react"
+        "react-aria-components"
       ],
       "registryDependencies": [
         "button",
