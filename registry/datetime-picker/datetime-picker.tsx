@@ -51,7 +51,6 @@ import { Button as ShadButton } from "@/components/ui/button";
 
 import { ScrollArea as ShadScrollArea } from "@/components/ui/scroll-area";
 
-import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import React from "react";
@@ -63,6 +62,61 @@ import {
 } from "@internationalized/date";
 
 import { DateTimeContext, useDateTime } from "./datetime-picker-context";
+
+/* =========================================================
+   ICONS
+   Inlined so the component doesn't depend on any icon library.
+   SVG paths from Lucide (https://lucide.dev), ISC License.
+   Swap these for your own icon library's components if you like.
+========================================================= */
+
+function IconBase({ className, children, ...props }: React.ComponentProps<"svg">) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={24}
+      height={24}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className={cn("size-4 shrink-0", className)}
+      {...props}
+    >
+      {children}
+    </svg>
+  );
+}
+
+function CalendarIcon(props: React.ComponentProps<"svg">) {
+  return (
+    <IconBase {...props}>
+      <path d="M8 2v3" />
+      <path d="M16 2v3" />
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <path d="M3 9h18" />
+    </IconBase>
+  );
+}
+
+function ChevronLeft(props: React.ComponentProps<"svg">) {
+  return (
+    <IconBase {...props}>
+      <path d="m15 18-6-6 6-6" />
+    </IconBase>
+  );
+}
+
+function ChevronRight(props: React.ComponentProps<"svg">) {
+  return (
+    <IconBase {...props}>
+      <path d="m9 18 6-6-6-6" />
+    </IconBase>
+  );
+}
 
 /* =========================================================
    TIME SELECTION DATA ARRAYS
