@@ -1,0 +1,37 @@
+---
+title: TanStack Form
+description: Use the DateTime Picker in a TanStack Form and Zod form with shadcn Field.
+---
+
+import { Code, TabItem, Tabs } from "@astrojs/starlight/components"
+import Preview from "../../../components/Preview.astro"
+import { FormDemo } from "../../../components/demos/form-demo"
+import source from "@/registry/datetime-picker/examples/tanstack-form-example.tsx?raw"
+
+`field.handleChange` takes the value directly, so pass it straight to `onChange`. Pass `field.handleBlur` to `onBlur` so the field is marked as touched when focus leaves the picker.
+
+The value is a `DateValue`, so validate it with a custom schema type. Submit the form empty to see the validation error.
+
+<Preview>
+  <FormDemo client:only="react" library="tanstack-form" />
+</Preview>
+
+## Code
+
+<Code code={source} lang="tsx" title="tanstack-form-example.tsx" />
+
+The example takes an optional `onSubmit` prop so this page can show the submitted value. In your app, handle the value inside the form instead.
+
+## Install this example
+
+With the [registry name](../../installation/) set up, this installs the example, the picker and only this form library:
+
+```bash
+npx shadcn@latest add @mrphilipp7/datetime-picker-tanstack-form
+```
+
+Or add the dependencies yourself:
+
+```bash
+npm install @tanstack/react-form zod
+```

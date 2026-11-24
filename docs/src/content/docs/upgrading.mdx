@@ -1,0 +1,27 @@
+---
+title: Upgrading
+description: Move from the two-file install to the single-file component.
+---
+
+import { Steps } from "@astrojs/starlight/components"
+
+Earlier versions installed two files into `components/datetime-picker/`. The picker now installs as a single file, `components/ui/datetime-picker.tsx`.
+
+<Steps>
+1. Reinstall the picker using the [installation](../installation/) command.
+
+2. Delete the old folder, including `datetime-picker.tsx` and `datetime-picker-context.ts`:
+
+   ```bash
+   rm -r components/datetime-picker
+   ```
+
+3. Update your imports:
+
+   ```diff lang="tsx"
+   - import { DateTimePicker } from "@/components/datetime-picker/datetime-picker"
+   + import { DateTimePicker } from "@/components/ui/datetime-picker"
+   ```
+</Steps>
+
+`DateTimeContext`, `useDateTime` and `SlotPicker` are no longer exported. They were internals of the picker and aren't needed to use it.

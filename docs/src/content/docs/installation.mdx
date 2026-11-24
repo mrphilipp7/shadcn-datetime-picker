@@ -1,0 +1,62 @@
+---
+title: Installation
+description: Add the DateTime Picker to a shadcn/ui project.
+---
+
+import { Aside, Steps, TabItem, Tabs } from "@astrojs/starlight/components"
+
+<Tabs syncKey="install">
+  <TabItem label="CLI">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/mrphilipp7/shadcn-datetime-picker/main/public/r/datetime-picker.json
+    ```
+  </TabItem>
+  <TabItem label="Registry name">
+    Add the registry to your `components.json` once:
+
+    ```json title="components.json"
+    {
+      "registries": {
+        "@mrphilipp7": "https://raw.githubusercontent.com/mrphilipp7/shadcn-datetime-picker/main/public/r/{name}.json"
+      }
+    }
+    ```
+
+    Then install by name:
+
+    ```bash
+    npx shadcn@latest add @mrphilipp7/datetime-picker
+    ```
+  </TabItem>
+  <TabItem label="Manual">
+    <Steps>
+    1. Add the shadcn components the picker uses:
+
+       ```bash
+       npx shadcn@latest add button scroll-area
+       ```
+
+    2. Install the dependencies:
+
+       ```bash
+       npm install @internationalized/date react-aria-components
+       ```
+
+    3. Copy [`datetime-picker.tsx`](https://github.com/mrphilipp7/shadcn-datetime-picker/blob/main/registry/datetime-picker/datetime-picker.tsx) into `components/ui/datetime-picker.tsx`.
+    </Steps>
+  </TabItem>
+</Tabs>
+
+## What gets installed
+
+- **One file:** `components/ui/datetime-picker.tsx`, or `src/components/ui/datetime-picker.tsx` if your project uses a `src` directory.
+- **shadcn components:** `button` and `scroll-area`.
+- **Dependencies:** `@internationalized/date` and `react-aria-components`.
+
+Icons are inlined as SVGs, so no icon library is needed. The picker works whichever icon library your shadcn project uses.
+
+<Aside title="Upgrading from an earlier version?">
+  The picker used to install to `components/datetime-picker/` as two files. See [Upgrading](../upgrading/).
+</Aside>
+
+Next, see [Usage](../usage/).

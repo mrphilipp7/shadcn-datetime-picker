@@ -1,0 +1,61 @@
+---
+title: API reference
+description: Props for DatePicker and DateTimePicker.
+---
+
+`DatePicker` and `DateTimePicker` take the same props.
+
+```tsx
+import {
+  DatePicker,
+  DateTimePicker,
+  type DateTimePickerProps,
+} from "@/components/ui/datetime-picker"
+```
+
+## Value
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `value` | `DateValue \| null` | Controlled value from [`@internationalized/date`](https://react-spectrum.adobe.com/internationalized/date/index.html): `CalendarDate` for `DatePicker`, `CalendarDateTime` for `DateTimePicker`. Pass `null` when empty; never leave it out. |
+| `onChange` | `(value: DateValue \| null) => void` | Called with the new value, not an event, on every date or time change, and with `null` when cleared. |
+
+## Form control
+
+These match shadcn's `Input`, so form libraries' field bindings work without changes.
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `id` | `string` | Pair with `<FieldLabel htmlFor>`. Must be unique on the page. |
+| `name` | `string` | Submits the value as an ISO string with native forms. |
+| `onBlur` | `() => void` | Called when focus leaves the picker. Moving into the calendar popover doesn't count, so opening it won't mark the field as touched. |
+| `onFocus` | `() => void` | Called when focus enters the picker. |
+| `aria-invalid` | `boolean` | Shows the invalid state. |
+| `disabled` | `boolean` | Disables the picker. |
+| `autoFocus` | `boolean` | Focuses the first segment on mount. |
+| `ref` | `Ref<HTMLElement>` | Resolves to the first editable segment, so form libraries can focus the picker when validation fails. |
+
+## Built-in label and messages
+
+Use these when you aren't composing with shadcn's `Field`.
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `label` | `string` | Visible label. With `Field`, use `FieldLabel` instead. |
+| `description` | `string` | Helper text. With `Field`, use `FieldDescription` instead. |
+| `errorMessage` | `string` | Error text. With `Field`, use `FieldError` instead. |
+
+## Other
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `className` | `string` | Applied to the root element. |
+| `pickerProps` | `PickerProps` | Passed to the underlying [React Aria `DatePicker`](https://react-spectrum.adobe.com/react-aria/DatePicker.html), such as `granularity`, `hourCycle`, `minValue`, `maxValue` and `isDateUnavailable`. |
+
+### `pickerProps.granularity`
+
+`"day" | "hour" | "minute" | "second"`. Controls which time columns appear. `DatePicker` always uses `"day"`; `DateTimePicker` defaults to `"minute"`.
+
+### `pickerProps.hourCycle`
+
+`12 | 24`, default `12`. The AM/PM column only appears in 12-hour mode.

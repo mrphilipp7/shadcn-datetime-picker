@@ -1,0 +1,46 @@
+---
+title: DateTime Picker
+description: A date and time picker for shadcn/ui, built on React Aria Components.
+template: splash
+hero:
+  tagline: A date and time picker for shadcn/ui. Calendar plus scrollable time columns, 12 or 24-hour, from day down to the second. Built on React Aria Components and installed with the shadcn CLI.
+  actions:
+    - text: Get started
+      link: installation/
+      icon: right-arrow
+    - text: View on GitHub
+      link: https://github.com/mrphilipp7/shadcn-datetime-picker
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from "@astrojs/starlight/components"
+import Preview from "../../components/Preview.astro"
+import { DateTimePickerDemo } from "@/registry/datetime-picker/examples/datetime-picker-demo"
+
+<Preview>
+  <DateTimePickerDemo client:only="react" />
+</Preview>
+
+```bash
+npx shadcn@latest add https://raw.githubusercontent.com/mrphilipp7/shadcn-datetime-picker/main/public/r/datetime-picker.json
+```
+
+<CardGrid>
+  <Card title="Fits shadcn/ui" icon="puzzle">
+    Matches the layout, spacing and states of shadcn's `Input`, and drops into
+    `Field` with `FieldLabel htmlFor`.
+  </Card>
+  <Card title="Accessible" icon="approve-check">
+    Built on React Aria Components: keyboard entry for every segment, focus
+    management and screen reader labels.
+  </Card>
+  <Card title="Works with your form library" icon="document">
+    Wired like shadcn's `Input` for [React Hook Form](forms/react-hook-form/),
+    [TanStack Form](forms/tanstack-form/) and [Formisch](forms/formisch/).
+  </Card>
+  <Card title="One file, no icon library" icon="seti:react">
+    Installs as a single `components/ui/datetime-picker.tsx` with inline SVG
+    icons, so it works with any shadcn icon library.
+  </Card>
+</CardGrid>

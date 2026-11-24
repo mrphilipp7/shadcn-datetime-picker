@@ -1,0 +1,37 @@
+---
+title: Formisch
+description: Use the DateTime Picker in a Formisch and Valibot form with shadcn Field.
+---
+
+import { Code, TabItem, Tabs } from "@astrojs/starlight/components"
+import Preview from "../../../components/Preview.astro"
+import { FormDemo } from "../../../components/demos/form-demo"
+import source from "@/registry/datetime-picker/examples/formisch-example.tsx?raw"
+
+Spread `field.props` for `name`, `ref`, `onFocus`, `onBlur` and `autoFocus`, then override `onChange` with `field.onChange`, which takes the value directly. `field.input` starts out `undefined`, so default it to `null` to keep the picker controlled.
+
+The value is a `DateValue`, so validate it with a custom schema type. Submit the form empty to see the validation error.
+
+<Preview>
+  <FormDemo client:only="react" library="formisch" />
+</Preview>
+
+## Code
+
+<Code code={source} lang="tsx" title="formisch-example.tsx" />
+
+The example takes an optional `onSubmit` prop so this page can show the submitted value. In your app, handle the value inside the form instead.
+
+## Install this example
+
+With the [registry name](../../installation/) set up, this installs the example, the picker and only this form library:
+
+```bash
+npx shadcn@latest add @mrphilipp7/datetime-picker-formisch
+```
+
+Or add the dependencies yourself:
+
+```bash
+npm install @formisch/react valibot
+```
