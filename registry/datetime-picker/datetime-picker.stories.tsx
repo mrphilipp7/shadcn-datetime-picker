@@ -113,3 +113,15 @@ export const NoVisibleLabel: Story = {
   args: { label: undefined },
   render: (args) => <Controlled component={DateTimePicker} {...args} />,
 }
+
+/**
+ * On a touch screen, swipe the calendar grid left or right to change
+ * months. Try it on a phone or with touch emulation in DevTools.
+ */
+export const SwipeMonths: Story = {
+  args: {
+    description: "On touch screens, swipe the calendar to change months.",
+  },
+  parameters: { viewport: { defaultViewport: "mobile1" } },
+  render: (args) => <Controlled component={DateTimePicker} {...args} />,
+}

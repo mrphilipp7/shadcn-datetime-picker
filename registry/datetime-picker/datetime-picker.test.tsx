@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { render, screen, waitFor, within } from "@testing-library/react"
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { parseDate, parseDateTime } from "@internationalized/date"
 import { type DateValue } from "react-aria-components"
@@ -172,6 +172,67 @@ describe("Field composition", () => {
     expect(
       within(dialog).getByRole("gridcell", { selected: true })
     ).toHaveTextContent("14")
+  })
+
+  describe("swipe between months", () => {
+    const openAt = async (
+      pickerProps?: React.ComponentProps<typeof DateTimePicker>["pickerProps"]
+    ) => {
+      const user = userEvent.setup()
+      render(
+        <DateTimePicker
+          label="Appointment"
+          value={parseDateTime("2026-03-14T15:09")}
+          pickerProps={pickerProps}
+        />
+      )
+      await user.click(screen.getByRole("button", { name: /calendar/i }))
+      const dialog = await screen.findByRole("dialog")
+      return {
+        heading: () => within(dialog).getByRole("heading").textContent,
+        area: dialog.querySelector('[data-slot="calendar-swipe-area"]')!,
+      }
+    }
+
+    const swipe = (
+      el: Element,
+      dx: number,
+      { dy = 0, pointerType = "touch" } = {}
+    ) => {
+      fireEvent.pointerDown(el, { pointerId: 1, pointerType, clientX: 150, clientY: 150 })
+      fireEvent.pointerUp(window, {
+        pointerId: 1,
+        pointerType,
+        clientX: 150 + dx,
+        clientY: 150 + dy,
+      })
+    }
+
+    it("swipes left to the next month and right to the previous", async () => {
+      const { heading, area } = await openAt()
+      expect(heading()).toMatch(/March 2026/)
+      act(() => swipe(area, -80))
+      expect(heading()).toMatch(/April 2026/)
+      act(() => swipe(area, 80))
+      act(() => swipe(area, 80))
+      expect(heading()).toMatch(/February 2026/)
+    })
+
+    it("ignores short, mostly vertical, and mouse drags", async () => {
+      const { heading, area } = await openAt()
+      act(() => swipe(area, -20))
+      act(() => swipe(area, -60, { dy: 80 }))
+      act(() => swipe(area, -80, { pointerType: "mouse" }))
+      expect(heading()).toMatch(/March 2026/)
+    })
+
+    it("does not swipe past maxValue", async () => {
+      const { heading, area } = await openAt({
+        maxValue: parseDate("2026-03-31"),
+      })
+      act(() => swipe(area, -80))
+      expect(heading()).toMatch(/March 2026/)
+    })
   })
 })
 

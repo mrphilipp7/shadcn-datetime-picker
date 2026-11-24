@@ -44,6 +44,7 @@ import {
   Text,
   Calendar,
   CalendarContext,
+  CalendarStateContext,
   type CalendarProps,
   type DatePickerProps as AriaDatePickerProps,
   type DateValue,
@@ -546,35 +547,37 @@ function SlotPicker({
                   </div>
                 </header>
 
-                <CalendarGrid className="border-collapse">
-                  {(date) => (
-                    <CalendarCell
-                      date={date}
-                      className={cn(
-                        "flex h-9 w-9 items-center justify-center rounded-md text-sm transition-colors",
-                        "outside-month:text-muted-foreground",
-                        "hover:bg-accent hover:text-accent-foreground",
-                        "data-[selected=true]:bg-primary",
-                        "data-[selected=true]:text-primary-foreground",
-                        "focus-visible:ring-2 focus-visible:ring-ring",
-                        "focus-visible:outline-none",
-                        "data-disabled:opacity-40",
-                        "data-disabled:hover:bg-transparent",
-                        "data-disabled:hover:text-muted-foreground",
-                        "data-disabled:text-muted-foreground",
-                        "data-unavailable:text-muted-foreground data-unavailable:line-through",
-                        "data-unavailable:hover:bg-transparent",
-                        "data-today:bg-accent",
-                        "data-today:text-accent-foreground",
-                        "data-[selected=true]:data-today:bg-primary",
-                        "data-[selected=true]:data-today:text-primary-foreground",
-                        value &&
-                          date.compare(value) === 0 &&
-                          "bg-primary text-primary-foreground",
-                      )}
-                    />
-                  )}
-                </CalendarGrid>
+                <SwipeableMonth>
+                  <CalendarGrid className="border-collapse">
+                    {(date) => (
+                      <CalendarCell
+                        date={date}
+                        className={cn(
+                          "flex h-9 w-9 items-center justify-center rounded-md text-sm transition-colors",
+                          "outside-month:text-muted-foreground",
+                          "hover:bg-accent hover:text-accent-foreground",
+                          "data-[selected=true]:bg-primary",
+                          "data-[selected=true]:text-primary-foreground",
+                          "focus-visible:ring-2 focus-visible:ring-ring",
+                          "focus-visible:outline-none",
+                          "data-disabled:opacity-40",
+                          "data-disabled:hover:bg-transparent",
+                          "data-disabled:hover:text-muted-foreground",
+                          "data-disabled:text-muted-foreground",
+                          "data-unavailable:text-muted-foreground data-unavailable:line-through",
+                          "data-unavailable:hover:bg-transparent",
+                          "data-today:bg-accent",
+                          "data-today:text-accent-foreground",
+                          "data-[selected=true]:data-today:bg-primary",
+                          "data-[selected=true]:data-today:text-primary-foreground",
+                          value &&
+                            date.compare(value) === 0 &&
+                            "bg-primary text-primary-foreground",
+                        )}
+                      />
+                    )}
+                  </CalendarGrid>
+                </SwipeableMonth>
               </PickerCalendar>
 
               {/* ---------------- TIME PANES ---------------- */}
@@ -654,6 +657,89 @@ function PickerCalendar(props: CalendarProps<DateValue>) {
     <CalendarContext.Provider value={inherited}>
       <Calendar {...props} />
     </CalendarContext.Provider>
+  );
+}
+
+/* =========================================================
+   SWIPEABLE MONTH
+   Touch only: swipe left for the next month, right for the
+   previous one. The prev/next buttons stay; this is a shortcut
+   for thumbs. Navigation goes through the calendar's own state,
+   so min/max and disabled limits still apply.
+
+   A swipe never also picks a day: react-aria only presses a
+   cell if the finger lifts on that same cell, and the 40px
+   threshold is wider than a cell (36px).
+
+   Every month change (swipe, buttons or arrow keys) slides the
+   grid in from the side it came from, unless the user prefers
+   reduced motion.
+========================================================= */
+
+/** Minimum horizontal travel (px) for a swipe. Wider than a day cell. */
+const SWIPE_THRESHOLD = 40;
+
+function SwipeableMonth({ children }: { children: React.ReactNode }) {
+  const state = React.useContext(CalendarStateContext);
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType !== "touch" || !state || state.isDisabled) return;
+    const { pointerId, clientX: startX, clientY: startY } = e;
+
+    // Listen on the window: the finger can lift outside the grid.
+    const end = (ev: PointerEvent) => {
+      if (ev.pointerId !== pointerId) return;
+      window.removeEventListener("pointerup", end);
+      window.removeEventListener("pointercancel", end);
+      if (ev.type === "pointercancel") return;
+
+      const dx = ev.clientX - startX;
+      const dy = ev.clientY - startY;
+      // Mostly sideways, so a vertical scroll never flips the month
+      if (Math.abs(dx) < SWIPE_THRESHOLD || Math.abs(dx) < Math.abs(dy) * 1.5)
+        return;
+
+      if (dx < 0 && !state.isNextVisibleRangeInvalid()) state.focusNextPage();
+      if (dx > 0 && !state.isPreviousVisibleRangeInvalid())
+        state.focusPreviousPage();
+    };
+    window.addEventListener("pointerup", end);
+    window.addEventListener("pointercancel", end);
+  };
+
+  // Slide the new month in from the side it came from
+  const monthStart = state?.visibleRange.start;
+  const prevStart = React.useRef(monthStart);
+  React.useLayoutEffect(() => {
+    const prev = prevStart.current;
+    prevStart.current = monthStart;
+    const el = ref.current;
+    if (!prev || !monthStart || !el || prev.compare(monthStart) === 0) return;
+    if (typeof el.animate !== "function") return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches)
+      return;
+
+    const from = monthStart.compare(prev) > 0 ? 16 : -16;
+    el.animate(
+      [
+        { transform: `translateX(${from}px)`, opacity: 0 },
+        { transform: "translateX(0)", opacity: 1 },
+      ],
+      { duration: 200, easing: "ease-out" },
+    );
+  }, [monthStart]);
+
+  return (
+    <div
+      ref={ref}
+      data-slot="calendar-swipe-area"
+      // Let the browser keep vertical scrolling; we handle sideways
+      className="touch-pan-y"
+      onPointerDown={onPointerDown}
+    >
+      {children}
+    </div>
   );
 }
 
