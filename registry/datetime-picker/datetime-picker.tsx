@@ -26,7 +26,7 @@
  * Validate with a custom schema type, e.g.
  * `z.custom<DateValue | null>().refine((v) => v !== null, "Required")`.
  *
- * Full examples: https://github.com/mrphilipp7/shadcn-datetime-picker#forms
+ * Full examples: https://mrphilipp7.github.io/shadcn-datetime-picker/forms/react-hook-form/
  */
 
 import {
