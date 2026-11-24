@@ -7,7 +7,7 @@
     "react-aria-components"
   ],
   "registryDependencies": [
-    "https://raw.githubusercontent.com/mrphilipp7/shadcn-datetime-picker/main/public/r/datetime-picker.json",
+    "https://mrphilipp7.github.io/shadcn-datetime-picker/r/datetime-picker.json",
     "field"
   ],
   "files": [

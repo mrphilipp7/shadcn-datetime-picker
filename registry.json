@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "datetime-picker",
-  "homepage": "https://github.com/mrphilipp7/shadcn-datetime-picker",
+  "homepage": "https://mrphilipp7.github.io/shadcn-datetime-picker/",
   "items": [
     {
       "name": "datetime-picker",
@@ -23,7 +23,7 @@
           "target": "components/ui/datetime-picker.tsx"
         }
       ],
-      "docs": "Import from @/components/ui/datetime-picker. Values are @internationalized/date DateValue objects; always pass value (null when empty). Inside a shadcn <Field>, give the picker an id and use <FieldLabel htmlFor={id}> instead of the label prop. onChange receives the value, not an event. React Hook Form: <DateTimePicker {...field} id aria-invalid={fieldState.invalid} />. TanStack Form: value={field.state.value} onChange={field.handleChange} onBlur={field.handleBlur}. Formisch: <DateTimePicker {...field.props} value={field.input ?? null} onChange={field.onChange} />. Examples: add datetime-picker-demo, datetime-picker-react-hook-form, datetime-picker-tanstack-form, or datetime-picker-formisch from this registry. Docs: https://github.com/mrphilipp7/shadcn-datetime-picker#readme"
+      "docs": "Import from @/components/ui/datetime-picker. Values are @internationalized/date DateValue objects; always pass value (null when empty). Inside a shadcn <Field>, give the picker an id and use <FieldLabel htmlFor={id}> instead of the label prop. onChange receives the value, not an event. React Hook Form: <DateTimePicker {...field} id aria-invalid={fieldState.invalid} />. TanStack Form: value={field.state.value} onChange={field.handleChange} onBlur={field.handleBlur}. Formisch: <DateTimePicker {...field.props} value={field.input ?? null} onChange={field.onChange} />. Examples: add datetime-picker-demo, datetime-picker-react-hook-form, datetime-picker-tanstack-form, or datetime-picker-formisch from this registry. Docs: https://mrphilipp7.github.io/shadcn-datetime-picker/"
     },
     {
       "name": "datetime-picker-demo",
@@ -34,7 +34,7 @@
         "react-aria-components"
       ],
       "registryDependencies": [
-        "https://raw.githubusercontent.com/mrphilipp7/shadcn-datetime-picker/main/public/r/datetime-picker.json",
+        "https://mrphilipp7.github.io/shadcn-datetime-picker/r/datetime-picker.json",
         "field"
       ],
       "files": [
@@ -57,7 +57,7 @@
         "react-aria-components"
       ],
       "registryDependencies": [
-        "https://raw.githubusercontent.com/mrphilipp7/shadcn-datetime-picker/main/public/r/datetime-picker.json",
+        "https://mrphilipp7.github.io/shadcn-datetime-picker/r/datetime-picker.json",
         "field",
         "button"
       ],
@@ -80,7 +80,7 @@
         "react-aria-components"
       ],
       "registryDependencies": [
-        "https://raw.githubusercontent.com/mrphilipp7/shadcn-datetime-picker/main/public/r/datetime-picker.json",
+        "https://mrphilipp7.github.io/shadcn-datetime-picker/r/datetime-picker.json",
         "field",
         "button"
       ],
@@ -103,7 +103,7 @@
         "react-aria-components"
       ],
       "registryDependencies": [
-        "https://raw.githubusercontent.com/mrphilipp7/shadcn-datetime-picker/main/public/r/datetime-picker.json",
+        "https://mrphilipp7.github.io/shadcn-datetime-picker/r/datetime-picker.json",
         "field",
         "button"
       ],

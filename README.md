@@ -15,10 +15,12 @@ Designed to sit alongside shadcn's `Input` and `Field` components with matching 
 ## Installation
 
 ```bash
-npx shadcn@latest add https://raw.githubusercontent.com/mrphilipp7/shadcn-datetime-picker/main/public/r/datetime-picker.json
+npx shadcn@latest add https://mrphilipp7.github.io/shadcn-datetime-picker/r/datetime-picker.json
 ```
 
 This installs a single file, `components/ui/datetime-picker.tsx` (or `src/components/ui/datetime-picker.tsx` if your project uses a `src` directory), plus the `button` and `scroll-area` shadcn components and the `@internationalized/date` and `react-aria-components` dependencies it relies on. Icons are inlined as SVGs, so no icon library is required.
+
+The older `https://raw.githubusercontent.com/mrphilipp7/shadcn-datetime-picker/main/public/r/...` URLs still work.
 
 > **Upgrading from an earlier version?** The picker used to install to `components/datetime-picker/` as two files. After reinstalling, delete that folder (`datetime-picker.tsx` and `datetime-picker-context.ts`) and change imports from `@/components/datetime-picker/datetime-picker` to `@/components/ui/datetime-picker`.
 
@@ -294,7 +296,7 @@ To use them, add this registry to your `components.json`:
 ```json
 {
   "registries": {
-    "@mrphilipp7": "https://raw.githubusercontent.com/mrphilipp7/shadcn-datetime-picker/main/public/r/{name}.json"
+    "@mrphilipp7": "https://mrphilipp7.github.io/shadcn-datetime-picker/r/{name}.json"
   }
 }
 ```
