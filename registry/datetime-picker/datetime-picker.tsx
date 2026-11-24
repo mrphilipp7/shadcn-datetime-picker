@@ -43,13 +43,18 @@ import {
   Popover,
   Text,
   Calendar,
+  CalendarContext,
+  type CalendarProps,
   type DatePickerProps as AriaDatePickerProps,
   type DateValue,
 } from "react-aria-components";
 
 import { Button as ShadButton } from "@/components/ui/button";
 
-import { ScrollArea as ShadScrollArea } from "@/components/ui/scroll-area";
+import {
+  ScrollArea as ShadScrollArea,
+  ScrollBar,
+} from "@/components/ui/scroll-area";
 
 import { cn } from "@/lib/utils";
 
@@ -487,7 +492,7 @@ function SlotPicker({
         ===================================================== */}
         <Popover
           className={cn(
-            "z-50 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-hidden",
+            "z-50 overflow-y-auto rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-hidden",
             "data-entering:animate-in data-entering:fade-in-0 data-entering:zoom-in-95",
             "data-exiting:animate-out data-exiting:fade-out-0 data-exiting:zoom-out-95",
             "data-[placement=bottom]:slide-in-from-top-2 data-[placement=top]:slide-in-from-bottom-2",
@@ -500,10 +505,11 @@ function SlotPicker({
           <Dialog className="outline-none">
             <div
               data-datetime-picker
-              className="flex max-h-[600px] flex-row overflow-hidden"
+              className="flex flex-col sm:max-h-150 sm:flex-row sm:overflow-hidden"
             >
               {/* ---------------- CALENDAR ---------------- */}
-              <Calendar
+              <PickerCalendar
+                value={value ?? null}
                 onChange={(date) => {
                   if (isDayOnly) {
                     onChange?.(date);
@@ -569,36 +575,41 @@ function SlotPicker({
                     />
                   )}
                 </CalendarGrid>
-              </Calendar>
+              </PickerCalendar>
 
               {/* ---------------- TIME PANES ---------------- */}
               {!isDayOnly && (
                 <>
-                  {/* Vertical divider between calendar and time columns */}
-                  <div className="mx-3 w-px self-stretch rounded-full bg-border" />
+                  {/* Divider: horizontal under the calendar on small
+                      screens, vertical beside it from `sm` up */}
+                  <div className="my-3 h-px rounded-full bg-border sm:mx-3 sm:my-0 sm:h-auto sm:w-px sm:self-stretch" />
 
-                  {/* Time columns — always side by side, always vertical scroll */}
-                  <div className="flex h-(--calendar-height,300px) min-h-0 flex-row divide-x">
+                  {/* Time units — small screens: stacked rows that scroll
+                      horizontally below the calendar. From `sm` up: side-by-side
+                      columns that scroll vertically beside it.
+                      `contain-inline-size` stops the long rows from widening
+                      the popover past the calendar on small screens. */}
+                  <div className="flex min-h-0 flex-col divide-y contain-inline-size sm:h-(--calendar-height,300px) sm:flex-row sm:divide-x sm:divide-y-0 sm:contain-none">
                     {showHour && (
-                      <TimeColumn>
+                      <TimeColumn label="Hours" shortLabel="Hr">
                         <HourScrollArea />
                       </TimeColumn>
                     )}
 
                     {showMinute && (
-                      <TimeColumn>
+                      <TimeColumn label="Minutes" shortLabel="Min">
                         <MinuteScrollArea />
                       </TimeColumn>
                     )}
 
                     {showSecond && (
-                      <TimeColumn>
+                      <TimeColumn label="Seconds" shortLabel="Sec">
                         <SecondScrollArea />
                       </TimeColumn>
                     )}
 
                     {showAmPm && (
-                      <TimeColumn>
+                      <TimeColumn label="AM/PM" shortLabel="">
                         <AmPmScrollArea />
                       </TimeColumn>
                     )}
@@ -615,17 +626,103 @@ function SlotPicker({
 }
 
 /* =========================================================
-   TIME COLUMN WRAPPER
-   Vertical scroll area for a single time unit column
+   PICKER CALENDAR
+   A Calendar whose selected day comes only from our `value`.
+
+   Inside a DatePicker, react-aria feeds the Calendar its own
+   `value` and `onChange` through context, and chains that
+   `onChange` with ours. Its handler stashes the clicked day in
+   private "date picked, time pending" state that nothing on our
+   side can reset, so after Clear (value -> null) the calendar
+   fell back to that stale day. Here we keep the context's other
+   props (min/max, unavailable dates, autoFocus, ...) but drop its
+   `value` / `onChange`, so the picker's `value` is the only
+   source of truth.
 ========================================================= */
 
-const TimeColumn = ({ children }: { children: React.ReactNode }) => {
+function PickerCalendar(props: CalendarProps<DateValue>) {
+  const ctx = React.useContext(CalendarContext);
+
+  const inherited = React.useMemo(() => {
+    if (!ctx) return null;
+    const { value, onChange, defaultValue, ...rest } =
+      ctx as CalendarProps<DateValue>;
+    return rest as React.ContextType<typeof CalendarContext>;
+  }, [ctx]);
+
   return (
-    <ShadScrollArea className="h-full w-auto">
-      <div className="flex flex-col p-2">{children}</div>
-    </ShadScrollArea>
+    <CalendarContext.Provider value={inherited}>
+      <Calendar {...props} />
+    </CalendarContext.Provider>
+  );
+}
+
+/* =========================================================
+   TIME COLUMN WRAPPER
+   Scroll area for a single time unit. Small screens: a labeled
+   row that scrolls horizontally. From `sm` up: a column that
+   scrolls vertically.
+========================================================= */
+
+const TimeColumn = ({
+  label,
+  shortLabel,
+  children,
+}: {
+  /** Accessible name for the group, e.g. "Hours". */
+  label: string;
+  /** Visible row label on small screens. Empty hides it. */
+  shortLabel: string;
+  children: React.ReactNode;
+}) => {
+  return (
+    <div
+      role="group"
+      aria-label={label}
+      className="flex min-w-0 items-center gap-2 sm:h-full"
+    >
+      {/* Always rendered (even when empty) so every row's buttons line up */}
+      <span
+        aria-hidden="true"
+        className="w-8 shrink-0 text-xs font-medium text-muted-foreground sm:hidden"
+      >
+        {shortLabel}
+      </span>
+      <ShadScrollArea className="min-w-0 flex-1 sm:h-full sm:w-auto sm:flex-none">
+        <div className="flex w-max flex-row py-1 sm:w-auto sm:flex-col sm:p-2">
+          {children}
+        </div>
+        <ScrollBar orientation="horizontal" />
+      </ShadScrollArea>
+    </div>
   );
 };
+
+/**
+ * Centers the selected time button inside its own scroll viewport
+ * when the popover opens. Works for both the vertical columns and
+ * the horizontal rows, and never scrolls the page itself (which
+ * `scrollIntoView` can do on mobile).
+ */
+function useCenterSelected(isOpen: boolean) {
+  const ref = React.useRef<HTMLButtonElement | null>(null);
+
+  React.useLayoutEffect(() => {
+    const el = ref.current;
+    if (!isOpen || !el) return;
+    const viewport = el.closest<HTMLElement>(
+      '[data-slot="scroll-area-viewport"]',
+    );
+    if (!viewport) return;
+
+    const e = el.getBoundingClientRect();
+    const v = viewport.getBoundingClientRect();
+    viewport.scrollTop += e.top - v.top - (v.height - e.height) / 2;
+    viewport.scrollLeft += e.left - v.left - (v.width - e.width) / 2;
+  }, [isOpen]);
+
+  return ref;
+}
 
 /* =========================================================
    HOUR / MINUTE / SECOND / AMPM SCROLL COMPONENTS
@@ -634,11 +731,7 @@ const TimeColumn = ({ children }: { children: React.ReactNode }) => {
 /* ------------------ HOUR  ------------------ */
 const HourScrollArea = () => {
   const { value, onChange, granularity, hourCycle, isOpen } = useDateTime();
-  const selectedRef = React.useRef<HTMLButtonElement | null>(null);
-
-  React.useLayoutEffect(() => {
-    if (isOpen) selectedRef.current?.scrollIntoView({ block: "center" });
-  }, [isOpen]);
+  const selectedRef = useCenterSelected(isOpen);
 
   if (
     granularity !== "hour" &&
@@ -703,11 +796,7 @@ const HourScrollArea = () => {
 /* ---------------- MINUTE ---------------- */
 const MinuteScrollArea = () => {
   const { value, onChange, granularity, isOpen } = useDateTime();
-  const selectedRef = React.useRef<HTMLButtonElement | null>(null);
-
-  React.useLayoutEffect(() => {
-    if (isOpen) selectedRef.current?.scrollIntoView({ block: "center" });
-  }, [isOpen]);
+  const selectedRef = useCenterSelected(isOpen);
 
   if (granularity !== "minute" && granularity !== "second") return null;
 
@@ -739,11 +828,7 @@ const MinuteScrollArea = () => {
 /* ---------------- SECOND ---------------- */
 const SecondScrollArea = () => {
   const { value, onChange, granularity, isOpen } = useDateTime();
-  const selectedRef = React.useRef<HTMLButtonElement | null>(null);
-
-  React.useLayoutEffect(() => {
-    if (isOpen) selectedRef.current?.scrollIntoView({ block: "center" });
-  }, [isOpen]);
+  const selectedRef = useCenterSelected(isOpen);
 
   if (granularity !== "second") return null;
 

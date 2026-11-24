@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { render, screen, waitFor, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
+import { parseDate, parseDateTime } from "@internationalized/date"
 import { type DateValue } from "react-aria-components"
 import { describe, expect, it, vi } from "vitest"
 
@@ -91,6 +92,86 @@ describe("Field composition", () => {
 
     await user.click(screen.getByRole("button", { name: "Elsewhere" }))
     expect(onBlur).toHaveBeenCalledTimes(1)
+  })
+
+  describe("Clear", () => {
+    // Picks the 15th from the calendar, then presses Clear
+    async function pickThenClear(user: ReturnType<typeof userEvent.setup>) {
+      await user.click(screen.getByRole("button", { name: /calendar/i }))
+      const dialog = await screen.findByRole("dialog")
+      const day15 = within(dialog)
+        .getAllByRole("button")
+        .find((el) => el.textContent === "15")!
+      await user.click(day15)
+      await user.click(within(dialog).getByRole("button", { name: "Clear" }))
+      await waitFor(() =>
+        expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
+      )
+    }
+
+    const openCalendar = async (user: ReturnType<typeof userEvent.setup>) => {
+      await user.click(screen.getByRole("button", { name: /calendar/i }))
+      return screen.findByRole("dialog")
+    }
+
+    it("empties the input", async () => {
+      const user = userEvent.setup()
+      render(<Composed />)
+      await pickThenClear(user)
+      expect(getSegment(/month/i)).toHaveAttribute("data-placeholder", "true")
+    })
+
+    it("leaves no day selected when the calendar is reopened", async () => {
+      const user = userEvent.setup()
+      render(<Composed />)
+      await pickThenClear(user)
+
+      const dialog = await openCalendar(user)
+      expect(
+        within(dialog).queryAllByRole("gridcell", { selected: true })
+      ).toHaveLength(0)
+    })
+
+    it("does not bring the old date back when the reopened popover is dismissed", async () => {
+      const user = userEvent.setup()
+      render(<Composed />)
+      await pickThenClear(user)
+
+      await openCalendar(user)
+      await user.keyboard("{Escape}")
+      await waitFor(() =>
+        expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
+      )
+      expect(getSegment(/month/i)).toHaveAttribute("data-placeholder", "true")
+    })
+  })
+
+  it("still applies minValue / maxValue to the calendar", async () => {
+    const user = userEvent.setup()
+    render(
+      <DateTimePicker
+        label="Appointment"
+        value={parseDateTime("2026-03-14T15:09")}
+        pickerProps={{
+          minValue: parseDate("2026-03-10"),
+          maxValue: parseDate("2026-03-20"),
+        }}
+      />
+    )
+    await user.click(screen.getByRole("button", { name: /calendar/i }))
+    const dialog = await screen.findByRole("dialog")
+    const cell = (day: string) =>
+      within(dialog)
+        .getAllByRole("button")
+        .find((el) => el.textContent === day)!
+
+    expect(cell("9")).toHaveAttribute("aria-disabled", "true")
+    expect(cell("15")).not.toHaveAttribute("aria-disabled")
+    expect(cell("21")).toHaveAttribute("aria-disabled", "true")
+    // The controlled value is the selected day
+    expect(
+      within(dialog).getByRole("gridcell", { selected: true })
+    ).toHaveTextContent("14")
   })
 })
 
