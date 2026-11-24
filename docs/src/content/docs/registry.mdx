@@ -1,0 +1,39 @@
+---
+title: Examples & AI assistants
+description: Registry items for each setup, and using the picker with the shadcn MCP server.
+---
+
+The registry publishes a ready-to-use example for each setup:
+
+| Item | What it shows |
+| --- | --- |
+| `datetime-picker-demo` | `DatePicker` and `DateTimePicker` inside shadcn `Field` |
+| `datetime-picker-react-hook-form` | React Hook Form and Zod |
+| `datetime-picker-tanstack-form` | TanStack Form and Zod |
+| `datetime-picker-formisch` | Formisch and Valibot |
+
+Add the registry to your `components.json`:
+
+```json title="components.json"
+{
+  "registries": {
+    "@mrphilipp7": "https://raw.githubusercontent.com/mrphilipp7/shadcn-datetime-picker/main/public/r/{name}.json"
+  }
+}
+```
+
+Then install by name. Examples install to `components/datetime-picker-examples/` and pull in the picker and only that example's form library:
+
+```bash
+npx shadcn@latest add @mrphilipp7/datetime-picker-react-hook-form
+```
+
+## AI assistants
+
+With the registry in your `components.json`, the [shadcn MCP server](https://ui.shadcn.com/docs/mcp) lets Claude Code, Cursor and other MCP clients search this registry and pull the right example for your form library:
+
+```bash
+npx shadcn@latest mcp init
+```
+
+The installed component also has JSDoc covering `Field` composition and the wiring for each form library, so assistants that read your codebase pick it up without any setup.

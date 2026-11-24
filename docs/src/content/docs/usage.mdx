@@ -1,0 +1,102 @@
+---
+title: Usage
+description: Basic usage, choosing a picker, and composing with shadcn Field.
+---
+
+import Preview from "../../components/Preview.astro"
+import { VariantsDemo } from "../../components/demos/variants-demo"
+
+The picker is controlled. Values are [`DateValue`](https://react-spectrum.adobe.com/internationalized/date/index.html) objects from `@internationalized/date`, not JavaScript `Date`s. Always pass `value`, using `null` when it's empty.
+
+```tsx
+import { useState } from "react"
+import { type DateValue } from "react-aria-components"
+
+import { DateTimePicker } from "@/components/ui/datetime-picker"
+
+export function Example() {
+  const [value, setValue] = useState<DateValue | null>(null)
+
+  return (
+    <DateTimePicker
+      label="Appointment"
+      value={value}
+      onChange={setValue}
+      pickerProps={{ hourCycle: 24 }}
+    />
+  )
+}
+```
+
+To create a value, use `parseDate("2026-03-14")` or `parseDateTime("2026-03-14T15:09")` from `@internationalized/date`. To get an ISO string back, call `value.toString()`.
+
+## `DatePicker` vs `DateTimePicker`
+
+- `DatePicker` shows the calendar only, with day granularity.
+- `DateTimePicker` adds time columns, with minute granularity by default.
+
+Both take the same props. `DatePicker` sets `pickerProps.granularity` to `"day"`.
+
+<Preview>
+  <VariantsDemo client:only="react" variant="date" />
+</Preview>
+
+## Granularity
+
+`pickerProps.granularity` controls which time columns appear: `"day"`, `"hour"`, `"minute"` or `"second"`.
+
+```tsx
+<DateTimePicker
+  value={value}
+  onChange={setValue}
+  pickerProps={{ granularity: "second", hourCycle: 24 }}
+/>
+```
+
+<Preview>
+  <VariantsDemo client:only="react" variant="seconds-24" />
+</Preview>
+
+## 12 or 24-hour time
+
+`pickerProps.hourCycle` accepts `12` or `24`. The default is `12`. The AM/PM column only appears in 12-hour mode.
+
+<Preview>
+  <VariantsDemo client:only="react" variant="time-12" />
+</Preview>
+
+## With `Field`
+
+The picker works like shadcn's `Input` inside a [`Field`](https://ui.shadcn.com/docs/components/field). Give it an `id` and point `FieldLabel` at it with `htmlFor`. Skip the picker's own `label`, `description` and `errorMessage` props, because the `Field` components replace them.
+
+```tsx
+<Field data-invalid={isInvalid}>
+  <FieldLabel htmlFor="appointment">Appointment</FieldLabel>
+  <DateTimePicker
+    id="appointment"
+    value={value}
+    onChange={setValue}
+    aria-invalid={isInvalid}
+  />
+  <FieldDescription>Pick a date and time for your appointment.</FieldDescription>
+  {isInvalid && <FieldError>Appointment date and time is required.</FieldError>}
+</Field>
+```
+
+Clicking the `FieldLabel` focuses the picker, and screen readers announce the label as the picker's name.
+
+## States
+
+Set `aria-invalid` to show the invalid state, and `data-invalid` on the surrounding `Field` to match.
+
+<Preview>
+  <VariantsDemo client:only="react" variant="invalid" />
+</Preview>
+
+`disabled` turns the picker off.
+
+<Preview>
+  <VariantsDemo client:only="react" variant="disabled" />
+</Preview>
+
+See the [API reference](../api/) for every prop, or [Forms](../forms/react-hook-form/) to use the picker with a form library.

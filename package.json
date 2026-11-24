@@ -2,12 +2,18 @@
   "name": "shadcn-datetime-picker",
   "private": true,
   "type": "module",
+  "workspaces": [
+    "docs"
+  ],
   "scripts": {
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "registry:build": "shadcn build",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "docs:dev": "npm run dev -w docs",
+    "docs:build": "npm run build -w docs",
+    "docs:preview": "npm run preview -w docs"
   },
   "dependencies": {
     "@internationalized/date": "^3.12.4",

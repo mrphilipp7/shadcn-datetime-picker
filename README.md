@@ -2,6 +2,8 @@
 
 A date and time picker for [shadcn/ui](https://ui.shadcn.com), built on [React Aria Components](https://react-spectrum.adobe.com/react-aria/DatePicker.html). Combines calendar selection with scrollable hour/minute/second/AM-PM columns, supports 12/24-hour formats, and lets you dial in exactly how much granularity you need — day only, or down to the second.
 
+**Docs and live demos:** https://mrphilipp7.github.io/shadcn-datetime-picker/
+
 ## Preview
 
 Designed to sit alongside shadcn's `Input` and `Field` components with matching layout, spacing, and states.
@@ -314,7 +316,10 @@ The component source lives in `registry/datetime-picker/`. `components/ui/` and 
 npm install
 npm run storybook        # http://localhost:6006
 npm test                 # Vitest + Testing Library
+npm run docs:dev         # docs site, http://localhost:4321/shadcn-datetime-picker/
 ```
+
+The docs site lives in `docs/`, an [Astro Starlight](https://starlight.astro.build) project set up as an npm workspace. Its demos render the real component and the examples from `registry/`, and its build copies `public/r/` into the site so the registry is served from the docs URL too. Pushing to `main` deploys it to GitHub Pages via `.github/workflows/docs.yml`.
 
 Stories and tests live next to the component. `registry/datetime-picker/examples/` holds one form per supported library; the **DateTime Picker → Forms** stories render them, and `datetime-picker.test.tsx` drives them the way a user would (typing, picking from the popover, submitting, validation errors, focus on error). The examples are also published as registry items (see above). Stories and tests aren't listed in `registry.json`, so they never reach users. Examples import the picker from `@/components/ui/datetime-picker`, the path it installs to, which `tsconfig.json` and the Vite configs map to `registry/datetime-picker/datetime-picker.tsx`.
 

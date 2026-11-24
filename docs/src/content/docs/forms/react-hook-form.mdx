@@ -1,0 +1,37 @@
+---
+title: React Hook Form
+description: Use the DateTime Picker in a React Hook Form and Zod form with shadcn Field.
+---
+
+import { Code, TabItem, Tabs } from "@astrojs/starlight/components"
+import Preview from "../../../components/Preview.astro"
+import { FormDemo } from "../../../components/demos/form-demo"
+import source from "@/registry/datetime-picker/examples/react-hook-form-example.tsx?raw"
+
+Spread `field` onto the picker. It supplies `name`, `value`, `onChange`, `onBlur`, `ref` and `disabled`, so the picker is focused when validation fails.
+
+The value is a `DateValue`, so validate it with a custom schema type. Submit the form empty to see the validation error.
+
+<Preview>
+  <FormDemo client:only="react" library="react-hook-form" />
+</Preview>
+
+## Code
+
+<Code code={source} lang="tsx" title="react-hook-form-example.tsx" />
+
+The example takes an optional `onSubmit` prop so this page can show the submitted value. In your app, handle the value inside the form instead.
+
+## Install this example
+
+With the [registry name](../../installation/) set up, this installs the example, the picker and only this form library:
+
+```bash
+npx shadcn@latest add @mrphilipp7/datetime-picker-react-hook-form
+```
+
+Or add the dependencies yourself:
+
+```bash
+npm install react-hook-form @hookform/resolvers zod
+```
